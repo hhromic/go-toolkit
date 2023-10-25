@@ -1,7 +1,7 @@
 // Copyright 2023 Hugo Hromic
 // SPDX-License-Identifier: Apache-2.0
 
-package logger_test
+package slog_test
 
 import (
 	"bytes"
@@ -10,7 +10,7 @@ import (
 	"regexp"
 	"testing"
 
-	"github.com/hhromic/go-toolkit/logger"
+	tkslog "github.com/hhromic/go-toolkit/slog"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -19,23 +19,23 @@ func TestHandlerString(t *testing.T) {
 	t.Parallel()
 
 	testCases := []struct {
-		handler logger.Handler
+		handler tkslog.Handler
 		want    string
 	}{
 		{
-			handler: logger.HandlerText,
+			handler: tkslog.HandlerText,
 			want:    "text",
 		},
 		{
-			handler: logger.HandlerJSON,
+			handler: tkslog.HandlerJSON,
 			want:    "json",
 		},
 		{
-			handler: logger.HandlerTint,
+			handler: tkslog.HandlerTint,
 			want:    "tint",
 		},
 		{
-			handler: logger.HandlerAuto,
+			handler: tkslog.HandlerAuto,
 			want:    "auto",
 		},
 	}
@@ -49,27 +49,27 @@ func TestHandlerMarshalText(t *testing.T) {
 	t.Parallel()
 
 	testCases := []struct {
-		handler logger.Handler
+		handler tkslog.Handler
 		want    []byte
 		errFunc require.ErrorAssertionFunc
 	}{
 		{
-			handler: logger.HandlerText,
+			handler: tkslog.HandlerText,
 			want:    []byte("text"),
 			errFunc: require.NoError,
 		},
 		{
-			handler: logger.HandlerJSON,
+			handler: tkslog.HandlerJSON,
 			want:    []byte("json"),
 			errFunc: require.NoError,
 		},
 		{
-			handler: logger.HandlerTint,
+			handler: tkslog.HandlerTint,
 			want:    []byte("tint"),
 			errFunc: require.NoError,
 		},
 		{
-			handler: logger.HandlerAuto,
+			handler: tkslog.HandlerAuto,
 			want:    []byte("auto"),
 			errFunc: require.NoError,
 		},
@@ -87,38 +87,38 @@ func TestHandlerUnmarshalText(t *testing.T) {
 
 	testCases := []struct {
 		b       []byte
-		want    logger.Handler
+		want    tkslog.Handler
 		errFunc require.ErrorAssertionFunc
 	}{
 		{
 			b:       []byte("text"),
-			want:    logger.HandlerText,
+			want:    tkslog.HandlerText,
 			errFunc: require.NoError,
 		},
 		{
 			b:       []byte("json"),
-			want:    logger.HandlerJSON,
+			want:    tkslog.HandlerJSON,
 			errFunc: require.NoError,
 		},
 		{
 			b:       []byte("tint"),
-			want:    logger.HandlerTint,
+			want:    tkslog.HandlerTint,
 			errFunc: require.NoError,
 		},
 		{
 			b:       []byte("auto"),
-			want:    logger.HandlerAuto,
+			want:    tkslog.HandlerAuto,
 			errFunc: require.NoError,
 		},
 		{
 			b:       []byte("foobar"),
-			want:    logger.HandlerText,
+			want:    tkslog.HandlerText,
 			errFunc: require.Error,
 		},
 	}
 
 	for _, tc := range testCases {
-		var h logger.Handler
+		var h tkslog.Handler
 		err := h.UnmarshalText(tc.b)
 		tc.errFunc(t, err)
 		assert.Equal(t, tc.want, h)
@@ -129,7 +129,7 @@ func TestNewSlogLogger(t *testing.T) {
 	t.Parallel()
 
 	testCases := []struct {
-		handler  logger.Handler
+		handler  tkslog.Handler
 		leveler  slog.Level
 		logLevel slog.Level
 		logMsg   string
@@ -137,7 +137,7 @@ func TestNewSlogLogger(t *testing.T) {
 		want     *regexp.Regexp
 	}{
 		{
-			handler:  logger.HandlerText,
+			handler:  tkslog.HandlerText,
 			leveler:  slog.LevelDebug,
 			logLevel: slog.LevelDebug,
 			logMsg:   "message",
@@ -145,7 +145,7 @@ func TestNewSlogLogger(t *testing.T) {
 			want:     regexp.MustCompile(`^ts=.+ level=DEBUG msg=message key1=val1 key2=val2\n$`),
 		},
 		{
-			handler:  logger.HandlerJSON,
+			handler:  tkslog.HandlerJSON,
 			leveler:  slog.LevelDebug,
 			logLevel: slog.LevelInfo,
 			logMsg:   "message",
@@ -153,7 +153,7 @@ func TestNewSlogLogger(t *testing.T) {
 			want:     regexp.MustCompile(`^{"ts":".+","level":"INFO","msg":"message","key1":"val1","key2":"val2"}\n$`),
 		},
 		{
-			handler:  logger.HandlerTint,
+			handler:  tkslog.HandlerTint,
 			leveler:  slog.LevelDebug,
 			logLevel: slog.LevelWarn,
 			logMsg:   "message",
@@ -161,7 +161,7 @@ func TestNewSlogLogger(t *testing.T) {
 			want:     regexp.MustCompile(`^\x1b\[2m.+\x1b\[0m \x1b\[93mWRN\x1b\[0m message \x1b\[2mkey1=\x1b\[0mval1 \x1b\[2mkey2=\x1b\[0mval2\n$`), //nolint:lll
 		},
 		{
-			handler:  logger.HandlerAuto,
+			handler:  tkslog.HandlerAuto,
 			leveler:  slog.LevelDebug,
 			logLevel: slog.LevelError,
 			logMsg:   "message",
@@ -169,7 +169,7 @@ func TestNewSlogLogger(t *testing.T) {
 			want:     regexp.MustCompile(`^ts=.+ level=ERROR msg=message key1=val1 key2=val2\n$`),
 		},
 		{
-			handler:  logger.HandlerText,
+			handler:  tkslog.HandlerText,
 			leveler:  slog.LevelWarn,
 			logLevel: slog.LevelInfo,
 			logMsg:   "message",
@@ -180,7 +180,7 @@ func TestNewSlogLogger(t *testing.T) {
 
 	for _, tc := range testCases {
 		var buf bytes.Buffer
-		l := logger.NewSlogLogger(&buf, tc.handler, tc.leveler)
+		l := tkslog.NewSlogLogger(&buf, tc.handler, tc.leveler)
 		require.NotNil(t, l)
 		l.Log(context.Background(), tc.logLevel, tc.logMsg, tc.logArgs...)
 		assert.Regexp(t, tc.want, buf.String())
