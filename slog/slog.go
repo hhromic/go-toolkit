@@ -19,13 +19,13 @@ type Handler int
 
 // Supported slog handlers.
 const (
-	// HandlerText is an [slog.TextHandler] which outputs logs in key=value format.
+	// HandlerText is an slog TextHandler which outputs logs in key=value format.
 	HandlerText Handler = iota
-	// HandlerJSON is an [slog.JSONHandler] which outputs logs in standard JSON format.
+	// HandlerJSON is an slog JSONHandler which outputs logs in standard JSON format.
 	HandlerJSON
-	// HandlerTint is an [slog.Handler] which outputs colorized logs in key=value format.
+	// HandlerTint is an slog Handler which outputs colorized logs in key=value format.
 	HandlerTint
-	// HandlerAuto uses [HandlerTint] if the output writer is a terminal or [HandlerText] otherwise.
+	// HandlerAuto uses HandlerTint if the output writer is a terminal or HandlerText otherwise.
 	HandlerAuto
 )
 
@@ -76,9 +76,9 @@ func (h *Handler) UnmarshalText(b []byte) error {
 	return nil
 }
 
-// NewSlogLogger creates an [slog.Logger] that outputs to writer, using the specified log handler
+// NewSlogLogger creates an slog Logger that outputs to writer, using the specified log handler
 // and the specified leveler implementation (for minimum logging level). This function also renames
-// the built-in attribute [slog.TimeKey] to "ts" for shorter logs output.
+// the built-in [slog.TimeKey] attribute to "ts" for shorter log lines.
 func NewSlogLogger(writer io.Writer, handler Handler, leveler slog.Leveler) *slog.Logger {
 	opts := &slog.HandlerOptions{
 		AddSource: false,

@@ -11,7 +11,7 @@ import (
 	"time"
 )
 
-// WaitAndShutdown waits for a [context.Context] to be done and shuts down an [http.Server] with a timeout.
+// WaitAndShutdown waits for a context to be done and shuts down an HTTP server with a timeout.
 func WaitAndShutdown(ctx context.Context, srv *http.Server, timeout time.Duration) error {
 	<-ctx.Done()
 	errs := []error{ctx.Err()}
