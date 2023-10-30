@@ -5,7 +5,7 @@ go 1.21
 toolchain go1.21.3
 
 require (
-	github.com/lmittmann/tint v1.0.2
+	github.com/lmittmann/tint v1.0.3
 	github.com/stretchr/testify v1.8.4
 	golang.org/x/term v0.13.0
 )
