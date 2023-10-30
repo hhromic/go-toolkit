@@ -11,7 +11,8 @@ import (
 	"os"
 
 	"github.com/lmittmann/tint"
-	"golang.org/x/term"
+	"github.com/mattn/go-colorable"
+	"github.com/mattn/go-isatty"
 )
 
 // Handler represents a supported slog handler.
@@ -95,8 +96,9 @@ func NewSlogLogger(writer io.Writer, handler Handler, leveler slog.Leveler) *slo
 	if handler == HandlerAuto {
 		handler = HandlerText
 
-		if f, ok := writer.(*os.File); ok && term.IsTerminal(int(f.Fd())) {
+		if f, ok := writer.(*os.File); ok && isatty.IsTerminal(f.Fd()) {
 			handler = HandlerTint
+			writer = colorable.NewColorable(f)
 		}
 	}
 
