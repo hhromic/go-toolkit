@@ -1,8 +1,6 @@
 module github.com/hhromic/go-toolkit
 
-go 1.21
-
-toolchain go1.21.3
+go 1.21.0
 
 require (
 	github.com/lmittmann/tint v1.0.3
