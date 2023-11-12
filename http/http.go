@@ -11,17 +11,62 @@ import (
 	"time"
 )
 
-// WaitAndShutdown waits for a context to be done and shuts down an HTTP server with a timeout.
-func WaitAndShutdown(ctx context.Context, srv *http.Server, timeout time.Duration) error {
+// RunServer calls srv.ListenAndServe and waits for the context to be done.
+// When the context is done, it gracefully shuts down the server with a timeout.
+func RunServer(ctx context.Context, srv *http.Server, timeout time.Duration) error {
+	done := make(chan struct{}, 1)
+	err := make(chan error, 1)
+
+	go waitAndShutdown(ctx, srv, timeout, done, err)
+
+	if err := srv.ListenAndServe(); !errors.Is(err, http.ErrServerClosed) {
+		return fmt.Errorf("listen and serve: %w", err)
+	}
+
+	<-done
+
+	if err := <-err; err != nil {
+		return fmt.Errorf("shutdown: %w", err)
+	}
+
+	return nil
+}
+
+// RunServerTLS calls srv.ListenAndServeTLS and waits for the context to be done.
+// When the context is done, it gracefully shuts down the server with a timeout.
+func RunServerTLS(ctx context.Context, srv *http.Server, certFile, keyFile string, timeout time.Duration) error {
+	done := make(chan struct{}, 1)
+	err := make(chan error, 1)
+
+	go waitAndShutdown(ctx, srv, timeout, done, err)
+
+	if err := srv.ListenAndServeTLS(certFile, keyFile); !errors.Is(err, http.ErrServerClosed) {
+		return fmt.Errorf("listen and serve TLS: %w", err)
+	}
+
+	<-done
+
+	if err := <-err; err != nil {
+		return fmt.Errorf("shutdown: %w", err)
+	}
+
+	return nil
+}
+
+func waitAndShutdown(
+	ctx context.Context,
+	srv *http.Server,
+	timeout time.Duration,
+	done chan<- struct{},
+	err chan<- error,
+) {
+	defer close(err)
+	defer close(done)
+
 	<-ctx.Done()
-	errs := []error{ctx.Err()}
 
 	ctx, cancel := context.WithTimeout(context.Background(), timeout)
 	defer cancel()
 
-	if err := srv.Shutdown(ctx); err != nil { //nolint:contextcheck
-		errs = append(errs, fmt.Errorf("shutdown: %w", err))
-	}
-
-	return errors.Join(errs...)
+	err <- srv.Shutdown(ctx) //nolint:contextcheck
 }
