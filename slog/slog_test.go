@@ -51,35 +51,35 @@ func TestHandlerMarshalText(t *testing.T) {
 	testCases := []struct {
 		handler tkslog.Handler
 		want    []byte
-		errFunc require.ErrorAssertionFunc
+		wantErr error
 	}{
 		{
 			handler: tkslog.HandlerText,
 			want:    []byte("text"),
-			errFunc: require.NoError,
+			wantErr: nil,
 		},
 		{
 			handler: tkslog.HandlerJSON,
 			want:    []byte("json"),
-			errFunc: require.NoError,
+			wantErr: nil,
 		},
 		{
 			handler: tkslog.HandlerTint,
 			want:    []byte("tint"),
-			errFunc: require.NoError,
+			wantErr: nil,
 		},
 		{
 			handler: tkslog.HandlerAuto,
 			want:    []byte("auto"),
-			errFunc: require.NoError,
+			wantErr: nil,
 		},
 	}
 
 	for _, tc := range testCases {
 		b, err := tc.handler.MarshalText()
-		tc.errFunc(t, err)
+		require.ErrorIs(t, err, tc.wantErr)
 
-		if err == nil {
+		if tc.wantErr == nil {
 			assert.Equal(t, tc.want, b)
 		}
 	}
@@ -91,41 +91,41 @@ func TestHandlerUnmarshalText(t *testing.T) {
 	testCases := []struct {
 		b       []byte
 		want    tkslog.Handler
-		errFunc require.ErrorAssertionFunc
+		wantErr error
 	}{
 		{
 			b:       []byte("text"),
 			want:    tkslog.HandlerText,
-			errFunc: require.NoError,
+			wantErr: nil,
 		},
 		{
 			b:       []byte("json"),
 			want:    tkslog.HandlerJSON,
-			errFunc: require.NoError,
+			wantErr: nil,
 		},
 		{
 			b:       []byte("tint"),
 			want:    tkslog.HandlerTint,
-			errFunc: require.NoError,
+			wantErr: nil,
 		},
 		{
 			b:       []byte("auto"),
 			want:    tkslog.HandlerAuto,
-			errFunc: require.NoError,
+			wantErr: nil,
 		},
 		{
 			b:       []byte("foobar"),
 			want:    tkslog.HandlerText,
-			errFunc: require.Error,
+			wantErr: tkslog.ErrUnknownHandlerName,
 		},
 	}
 
 	for _, tc := range testCases { //nolint:varnamelen
 		var h tkslog.Handler
 		err := h.UnmarshalText(tc.b)
-		tc.errFunc(t, err)
+		require.ErrorIs(t, err, tc.wantErr)
 
-		if err == nil {
+		if tc.wantErr == nil {
 			assert.Equal(t, tc.want, h)
 		}
 	}
