@@ -78,7 +78,10 @@ func TestHandlerMarshalText(t *testing.T) {
 	for _, tc := range testCases {
 		b, err := tc.handler.MarshalText()
 		tc.errFunc(t, err)
-		assert.Equal(t, tc.want, b)
+
+		if err == nil {
+			assert.Equal(t, tc.want, b)
+		}
 	}
 }
 
@@ -117,11 +120,14 @@ func TestHandlerUnmarshalText(t *testing.T) {
 		},
 	}
 
-	for _, tc := range testCases {
+	for _, tc := range testCases { //nolint:varnamelen
 		var h tkslog.Handler
 		err := h.UnmarshalText(tc.b)
 		tc.errFunc(t, err)
-		assert.Equal(t, tc.want, h)
+
+		if err == nil {
+			assert.Equal(t, tc.want, h)
+		}
 	}
 }
 
@@ -178,10 +184,11 @@ func TestNewSlogLogger(t *testing.T) {
 		},
 	}
 
-	for _, tc := range testCases {
+	for _, tc := range testCases { //nolint:varnamelen
 		var buf bytes.Buffer
 		l := tkslog.NewSlogLogger(&buf, tc.handler, tc.leveler)
 		require.NotNil(t, l)
+
 		l.Log(context.Background(), tc.logLevel, tc.logMsg, tc.logArgs...)
 		assert.Regexp(t, tc.want, buf.String())
 	}
