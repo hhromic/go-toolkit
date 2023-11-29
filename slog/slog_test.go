@@ -16,8 +16,6 @@ import (
 )
 
 func TestHandlerString(t *testing.T) {
-	t.Parallel()
-
 	testCases := []struct {
 		handler tkslog.Handler
 		want    string
@@ -46,8 +44,6 @@ func TestHandlerString(t *testing.T) {
 }
 
 func TestHandlerMarshalText(t *testing.T) {
-	t.Parallel()
-
 	testCases := []struct {
 		handler tkslog.Handler
 		want    []byte
@@ -86,8 +82,6 @@ func TestHandlerMarshalText(t *testing.T) {
 }
 
 func TestHandlerUnmarshalText(t *testing.T) {
-	t.Parallel()
-
 	testCases := []struct {
 		b       []byte
 		want    tkslog.Handler
@@ -132,8 +126,6 @@ func TestHandlerUnmarshalText(t *testing.T) {
 }
 
 func TestNewSlogLogger(t *testing.T) {
-	t.Parallel()
-
 	testCases := []struct {
 		handler  tkslog.Handler
 		leveler  slog.Level

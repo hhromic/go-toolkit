@@ -9,6 +9,7 @@ linters:
     - interfacer  # archived by the owner
     - maligned  # replaced by 'govet'
     - nosnakecase  # replaced by 'revive'
+    - paralleltest  # no need to enforce parallel testing
     - scopelint  # replaced by 'exportloopref'
     - structcheck  # replaced by 'unused'
     - varcheck  # replaced by 'unused'
