@@ -30,7 +30,7 @@ const (
 	HandlerAuto
 )
 
-// Errors used by the logger package.
+// Errors used by the slog package.
 var (
 	// ErrUnknownHandlerName is returned when an unknown slog handler name is used.
 	ErrUnknownHandlerName = errors.New("unknown handler name")
