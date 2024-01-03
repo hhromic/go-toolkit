@@ -58,7 +58,7 @@ func (h Handler) MarshalText() ([]byte, error) {
 }
 
 // UnmarshalText implements [encoding.TextUnmarshaler].
-// It accepts any string produced by [Handler.MarshalText].
+// It accepts any slice of bytes produced by [Handler.MarshalText].
 func (h *Handler) UnmarshalText(b []byte) error {
 	str := string(b)
 	switch str {
