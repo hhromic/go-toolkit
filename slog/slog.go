@@ -71,7 +71,7 @@ func (h *Handler) UnmarshalText(b []byte) error {
 	case HandlerAuto.String():
 		*h = HandlerAuto
 	default:
-		return fmt.Errorf("%w: %q", ErrUnknownHandlerName, str)
+		return fmt.Errorf("%q: %w", str, ErrUnknownHandlerName)
 	}
 
 	return nil
