@@ -8,6 +8,8 @@ import (
 )
 
 // Range is a min/max range (inclusive) of integers that references a value of any type.
+//
+// Source: https://stackoverflow.com/a/39750394
 type Range struct {
 	Min, Max int
 	Value    any
@@ -20,22 +22,30 @@ type Range struct {
 type Ranges []Range
 
 // Len is the number of [Range] elements in the collection.
+//
+// Source: https://stackoverflow.com/a/39750394
 func (r Ranges) Len() int {
 	return len(r)
 }
 
 // Less reports whether the [Range] element with index i
 // must sort before the [Range] element with index j.
+//
+// Source: https://stackoverflow.com/a/39750394
 func (r Ranges) Less(i, j int) bool {
 	return r[i].Min < r[j].Min
 }
 
 // Swap swaps the [Range] elements with indexes i and j.
+//
+// Source: https://stackoverflow.com/a/39750394
 func (r Ranges) Swap(i, j int) {
 	r[i], r[j] = r[j], r[i]
 }
 
 // Sort sorts the collection in ascending order as determined by the [Ranges.Less] method.
+//
+// Source: https://stackoverflow.com/a/39750394
 func (r Ranges) Sort() {
 	sort.Sort(r)
 }
@@ -43,6 +53,8 @@ func (r Ranges) Sort() {
 // Search uses binary search to find and return the first [Range] element in the collection
 // in which v is contained (min/max range values are inclusive).
 // This function uses the [sort.Search] function.
+//
+// Source: https://stackoverflow.com/a/39750394
 func (r Ranges) Search(v int) any {
 	ln := r.Len()
 	if i := sort.Search(ln, func(i int) bool { return v <= r[i].Max }); i < ln {
