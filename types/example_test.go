@@ -5,6 +5,7 @@ package types_test
 
 import (
 	"fmt"
+	"math"
 
 	tktypes "github.com/hhromic/go-toolkit/types"
 )
@@ -40,4 +41,42 @@ func ExampleRanges_Search() {
 	// value 3 belongs to <nil>
 	// value 4 belongs to cat
 	// value 5 belongs to <nil>
+}
+
+func ExampleBareRange_MarshalText() {
+	ranges := []tktypes.BareRange{
+		{Min: math.MinInt, Max: 10, Value: struct{}{}},
+		{Min: 20, Max: 30, Value: struct{}{}},
+		{Min: 40, Max: math.MaxInt, Value: struct{}{}},
+	}
+
+	for _, r := range ranges {
+		b, err := r.MarshalText()
+		if err != nil {
+			panic(err)
+		}
+
+		fmt.Println(string(b))
+	}
+
+	// Output:
+	// :10
+	// 20:30
+	// 40:
+}
+
+func ExampleBareRange_UnmarshalText() {
+	for _, t := range []string{":10", "20:30", "40:"} {
+		var r tktypes.BareRange
+		if err := r.UnmarshalText([]byte(t)); err != nil {
+			panic(err)
+		}
+
+		fmt.Println(r)
+	}
+
+	// Output:
+	// {-9223372036854775808 10 {}}
+	// {20 30 {}}
+	// {40 9223372036854775807 {}}
 }

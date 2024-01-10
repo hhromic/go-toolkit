@@ -4,10 +4,12 @@
 package types_test
 
 import (
+	"math"
 	"testing"
 
 	tktypes "github.com/hhromic/go-toolkit/types"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestRangesLen(t *testing.T) {
@@ -264,6 +266,91 @@ func TestRangesSearch(t *testing.T) {
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
 			assert.Equal(t, tc.want, tc.ranges.Search(tc.v))
+		})
+	}
+}
+
+func TestBareRangeMarshalText(t *testing.T) {
+	testCases := []struct {
+		name    string
+		r       tktypes.BareRange
+		want    []byte
+		wantErr error
+	}{
+		{
+			name:    "OpenLeft",
+			r:       tktypes.BareRange{Min: math.MinInt, Max: 10, Value: struct{}{}},
+			want:    []byte(":10"),
+			wantErr: nil,
+		},
+		{
+			name:    "Closed",
+			r:       tktypes.BareRange{Min: 20, Max: 30, Value: struct{}{}},
+			want:    []byte("20:30"),
+			wantErr: nil,
+		},
+		{
+			name:    "OpenRight",
+			r:       tktypes.BareRange{Min: 40, Max: math.MaxInt, Value: struct{}{}},
+			want:    []byte("40:"),
+			wantErr: nil,
+		},
+	}
+
+	for _, tc := range testCases { //nolint:varnamelen
+		t.Run(tc.name, func(t *testing.T) {
+			b, err := tc.r.MarshalText()
+			require.ErrorIs(t, err, tc.wantErr)
+
+			if tc.wantErr == nil {
+				assert.Equal(t, tc.want, b)
+			}
+		})
+	}
+}
+
+func TestBareRangeUnmarshalText(t *testing.T) {
+	testCases := []struct {
+		name    string
+		b       []byte
+		want    tktypes.BareRange
+		wantErr error
+	}{
+		{
+			name:    "OpenLeft",
+			b:       []byte(":10"),
+			want:    tktypes.BareRange{Min: math.MinInt, Max: 10, Value: struct{}{}},
+			wantErr: nil,
+		},
+		{
+			name:    "Closed",
+			b:       []byte("20:30"),
+			want:    tktypes.BareRange{Min: 20, Max: 30, Value: struct{}{}},
+			wantErr: nil,
+		},
+		{
+			name:    "OpenRight",
+			b:       []byte("40:"),
+			want:    tktypes.BareRange{Min: 40, Max: math.MaxInt, Value: struct{}{}},
+			wantErr: nil,
+		},
+		{
+			name:    "InvalidFormat",
+			b:       []byte("foo::bar"),
+			want:    tktypes.BareRange{}, //nolint:exhaustruct
+			wantErr: tktypes.ErrUnknownFormat,
+		},
+	}
+
+	for _, tc := range testCases { //nolint:varnamelen
+		t.Run(tc.name, func(t *testing.T) {
+			var r tktypes.BareRange
+			err := r.UnmarshalText(tc.b)
+			require.ErrorIs(t, err, tc.wantErr)
+
+			if tc.wantErr == nil {
+				assert.Equal(t, tc.want, r)
+			}
 		})
 	}
 }

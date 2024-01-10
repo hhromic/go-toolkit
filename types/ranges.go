@@ -4,7 +4,11 @@
 package types
 
 import (
+	"fmt"
+	"math"
 	"sort"
+	"strconv"
+	"strings"
 )
 
 // Range is a min/max range (inclusive) of integers that references a value of any type.
@@ -61,6 +65,69 @@ func (r Ranges) Search(v int) any {
 		if it := &r[i]; v >= it.Min && v <= it.Max {
 			return it.Value
 		}
+	}
+
+	return nil
+}
+
+// BareRange is an alias for marshaling/unmarshaling bare ranges with no significant values.
+type BareRange = Range
+
+// MarshalText implements [encoding.TextMarshaler] for a bare range.
+// The output format is "min:max". If min or max are [math.MinInt] or [math.MaxInt] respectively,
+// their values are omitted in the output: "min:" or ":max".
+func (r BareRange) MarshalText() ([]byte, error) {
+	var out string
+
+	switch {
+	case r.Min == math.MinInt && r.Max != math.MaxInt:
+		out = fmt.Sprintf(":%d", r.Max)
+	case r.Min != math.MinInt && r.Max == math.MaxInt:
+		out = fmt.Sprintf("%d:", r.Min)
+	default:
+		out = fmt.Sprintf("%d:%d", r.Min, r.Max)
+	}
+
+	return []byte(out), nil
+}
+
+// UnmarshalText implements [encoding.TextUnmarshaler].
+// It accepts any slice of bytes produced by [BareRange.MarshalText].
+func (r *BareRange) UnmarshalText(b []byte) error {
+	str := string(b)
+	switch strings.Count(str, ":") {
+	case 0:
+		n, err := strconv.ParseInt(str, 10, 0)
+		if err != nil {
+			return fmt.Errorf("%q: parse int: %w", str, err)
+		}
+
+		*r = Range{Min: int(n), Max: int(n), Value: struct{}{}}
+	case 1:
+		var min, max int64
+
+		parts := strings.SplitN(str, ":", 2) //nolint:gomnd
+		if parts[0] == "" {
+			min = math.MinInt
+		} else {
+			var err error
+			if min, err = strconv.ParseInt(parts[0], 10, 0); err != nil {
+				return fmt.Errorf("%q: parse int: %w", parts[0], err)
+			}
+		}
+
+		if parts[1] == "" {
+			max = math.MaxInt
+		} else {
+			var err error
+			if max, err = strconv.ParseInt(parts[1], 10, 0); err != nil {
+				return fmt.Errorf("%q: parse int: %w", parts[1], err)
+			}
+		}
+
+		*r = Range{Min: int(min), Max: int(max), Value: struct{}{}}
+	default:
+		return fmt.Errorf("%q: %w", str, ErrUnknownFormat)
 	}
 
 	return nil
