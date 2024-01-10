@@ -11,6 +11,12 @@ import (
 	"strings"
 )
 
+// Minimum and maximum possible values to be used in a [Range] instance.
+const (
+	RangeMin = math.MinInt
+	RangeMax = math.MaxInt
+)
+
 // Range is a min/max range (inclusive) of integers that references a value of any type.
 //
 // Source: https://stackoverflow.com/a/39750394
@@ -74,15 +80,15 @@ func (r Ranges) Search(v int) any {
 type BareRange = Range
 
 // MarshalText implements [encoding.TextMarshaler] for a bare range.
-// The output format is "min:max". If min or max are [math.MinInt] or [math.MaxInt] respectively,
+// The output format is "min:max". If min or max are [RangeMin] or [RangeMax] respectively,
 // their values are omitted in the output: "min:" or ":max".
 func (r BareRange) MarshalText() ([]byte, error) {
 	var out string
 
 	switch {
-	case r.Min == math.MinInt && r.Max != math.MaxInt:
+	case r.Min == RangeMin && r.Max != RangeMax:
 		out = fmt.Sprintf(":%d", r.Max)
-	case r.Min != math.MinInt && r.Max == math.MaxInt:
+	case r.Min != RangeMin && r.Max == RangeMax:
 		out = fmt.Sprintf("%d:", r.Min)
 	default:
 		out = fmt.Sprintf("%d:%d", r.Min, r.Max)
@@ -108,7 +114,7 @@ func (r *BareRange) UnmarshalText(b []byte) error {
 
 		parts := strings.SplitN(str, ":", 2) //nolint:gomnd
 		if parts[0] == "" {
-			min = math.MinInt
+			min = RangeMin
 		} else {
 			var err error
 			if min, err = strconv.ParseInt(parts[0], 10, 0); err != nil {
@@ -117,7 +123,7 @@ func (r *BareRange) UnmarshalText(b []byte) error {
 		}
 
 		if parts[1] == "" {
-			max = math.MaxInt
+			max = RangeMax
 		} else {
 			var err error
 			if max, err = strconv.ParseInt(parts[1], 10, 0); err != nil {

@@ -4,7 +4,6 @@
 package types_test
 
 import (
-	"math"
 	"testing"
 
 	tktypes "github.com/hhromic/go-toolkit/types"
@@ -279,7 +278,7 @@ func TestBareRangeMarshalText(t *testing.T) {
 	}{
 		{
 			name:    "OpenLeft",
-			r:       tktypes.BareRange{Min: math.MinInt, Max: 10, Value: struct{}{}},
+			r:       tktypes.BareRange{Min: tktypes.RangeMin, Max: 10, Value: struct{}{}},
 			want:    []byte(":10"),
 			wantErr: nil,
 		},
@@ -291,7 +290,7 @@ func TestBareRangeMarshalText(t *testing.T) {
 		},
 		{
 			name:    "OpenRight",
-			r:       tktypes.BareRange{Min: 40, Max: math.MaxInt, Value: struct{}{}},
+			r:       tktypes.BareRange{Min: 40, Max: tktypes.RangeMax, Value: struct{}{}},
 			want:    []byte("40:"),
 			wantErr: nil,
 		},
@@ -319,7 +318,7 @@ func TestBareRangeUnmarshalText(t *testing.T) {
 		{
 			name:    "OpenLeft",
 			b:       []byte(":10"),
-			want:    tktypes.BareRange{Min: math.MinInt, Max: 10, Value: struct{}{}},
+			want:    tktypes.BareRange{Min: tktypes.RangeMin, Max: 10, Value: struct{}{}},
 			wantErr: nil,
 		},
 		{
@@ -331,7 +330,7 @@ func TestBareRangeUnmarshalText(t *testing.T) {
 		{
 			name:    "OpenRight",
 			b:       []byte("40:"),
-			want:    tktypes.BareRange{Min: 40, Max: math.MaxInt, Value: struct{}{}},
+			want:    tktypes.BareRange{Min: 40, Max: tktypes.RangeMax, Value: struct{}{}},
 			wantErr: nil,
 		},
 		{
