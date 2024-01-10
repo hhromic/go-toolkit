@@ -47,6 +47,8 @@ func ExampleBareRange_MarshalText() {
 		{Min: tktypes.RangeMin, Max: 10, Value: struct{}{}},
 		{Min: 20, Max: 30, Value: struct{}{}},
 		{Min: 40, Max: tktypes.RangeMax, Value: struct{}{}},
+		{Min: 50, Max: 50, Value: struct{}{}},
+		{Min: tktypes.RangeMin, Max: tktypes.RangeMax, Value: struct{}{}},
 	}
 
 	for _, r := range ranges {
@@ -62,6 +64,8 @@ func ExampleBareRange_MarshalText() {
 	// :10
 	// 20:30
 	// 40:
+	// 50
+	// :
 }
 
 func ExampleBareRange_UnmarshalText() {

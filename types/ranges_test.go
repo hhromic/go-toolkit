@@ -294,6 +294,18 @@ func TestBareRangeMarshalText(t *testing.T) {
 			want:    []byte("40:"),
 			wantErr: nil,
 		},
+		{
+			name:    "Single",
+			r:       tktypes.BareRange{Min: 50, Max: 50, Value: struct{}{}},
+			want:    []byte("50"),
+			wantErr: nil,
+		},
+		{
+			name:    "FullRange",
+			r:       tktypes.BareRange{Min: tktypes.RangeMin, Max: tktypes.RangeMax, Value: struct{}{}},
+			want:    []byte(":"),
+			wantErr: nil,
+		},
 	}
 
 	for _, tc := range testCases { //nolint:varnamelen
@@ -331,6 +343,18 @@ func TestBareRangeUnmarshalText(t *testing.T) {
 			name:    "OpenRight",
 			b:       []byte("40:"),
 			want:    tktypes.BareRange{Min: 40, Max: tktypes.RangeMax, Value: struct{}{}},
+			wantErr: nil,
+		},
+		{
+			name:    "Single",
+			b:       []byte("50"),
+			want:    tktypes.BareRange{Min: 50, Max: 50, Value: struct{}{}},
+			wantErr: nil,
+		},
+		{
+			name:    "FullRange",
+			b:       []byte(":"),
+			want:    tktypes.BareRange{Min: tktypes.RangeMin, Max: tktypes.RangeMax, Value: struct{}{}},
 			wantErr: nil,
 		},
 		{

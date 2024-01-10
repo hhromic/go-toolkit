@@ -81,15 +81,20 @@ type BareRange = Range
 
 // MarshalText implements [encoding.TextMarshaler] for a bare range.
 // The output format is "min:max". If min or max are [RangeMin] or [RangeMax] respectively,
-// their values are omitted in the output: "min:" or ":max".
+// then their values are omitted in the output: ":max", "min:" or ":".
+// If min and max are equal, then only min is used in the output with no separator: "min".
 func (r BareRange) MarshalText() ([]byte, error) {
 	var out string
 
 	switch {
+	case r.Min == RangeMin && r.Max == RangeMax:
+		out = ":"
 	case r.Min == RangeMin && r.Max != RangeMax:
 		out = fmt.Sprintf(":%d", r.Max)
 	case r.Min != RangeMin && r.Max == RangeMax:
 		out = fmt.Sprintf("%d:", r.Min)
+	case r.Min == r.Max:
+		out = strconv.Itoa(r.Min)
 	default:
 		out = fmt.Sprintf("%d:%d", r.Min, r.Max)
 	}
