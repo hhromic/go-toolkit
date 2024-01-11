@@ -10,11 +10,11 @@ import (
 )
 
 func ExampleRanges_Sort() {
-	var ranges tktypes.Ranges
-
-	ranges = append(ranges, tktypes.Range{Min: 4, Max: 4, Value: "cat"})
-	ranges = append(ranges, tktypes.Range{Min: 1, Max: 2, Value: "dog"})
-	ranges = append(ranges, tktypes.Range{Min: 3, Max: 8, Value: "fox"})
+	ranges := tktypes.Ranges{
+		{Min: 4, Max: 4, Value: "cat"},
+		{Min: 1, Max: 2, Value: "dog"},
+		{Min: 3, Max: 8, Value: "fox"},
+	}
 
 	ranges.Sort()
 	fmt.Println(ranges)
@@ -24,10 +24,10 @@ func ExampleRanges_Sort() {
 }
 
 func ExampleRanges_Search() {
-	var ranges tktypes.Ranges
-
-	ranges = append(ranges, tktypes.Range{Min: 1, Max: 2, Value: "dog"})
-	ranges = append(ranges, tktypes.Range{Min: 4, Max: 4, Value: "cat"})
+	ranges := tktypes.Ranges{
+		{Min: 1, Max: 2, Value: "dog"},
+		{Min: 4, Max: 4, Value: "cat"},
+	}
 
 	for i := 0; i < 6; i++ {
 		fmt.Printf("value %d belongs to %v\n", i, ranges.Search(i))
