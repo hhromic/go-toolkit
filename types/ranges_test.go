@@ -25,8 +25,8 @@ func TestRangesLen(t *testing.T) {
 		{
 			name: "TwoElements",
 			ranges: tktypes.Ranges{
-				tktypes.Range{Min: 1, Max: 3, Value: "foo"},
-				tktypes.Range{Min: 5, Max: 7, Value: "bar"},
+				{Min: 1, Max: 3, Value: "foo"},
+				{Min: 5, Max: 7, Value: "bar"},
 			},
 			want: 2,
 		},
@@ -58,9 +58,9 @@ func TestRangesLess(t *testing.T) {
 		{
 			name: "ThreeElements",
 			ranges: tktypes.Ranges{
-				tktypes.Range{Min: 1, Max: 3, Value: "foo"},
-				tktypes.Range{Min: 2, Max: 5, Value: "baz"},
-				tktypes.Range{Min: 5, Max: 7, Value: "bar"},
+				{Min: 1, Max: 3, Value: "foo"},
+				{Min: 2, Max: 5, Value: "baz"},
+				{Min: 5, Max: 7, Value: "bar"},
 			},
 			i:         0,
 			j:         1,
@@ -70,9 +70,9 @@ func TestRangesLess(t *testing.T) {
 		{
 			name: "ThreeElementsReversed",
 			ranges: tktypes.Ranges{
-				tktypes.Range{Min: 5, Max: 7, Value: "bar"},
-				tktypes.Range{Min: 2, Max: 5, Value: "baz"},
-				tktypes.Range{Min: 1, Max: 3, Value: "foo"},
+				{Min: 5, Max: 7, Value: "bar"},
+				{Min: 2, Max: 5, Value: "baz"},
+				{Min: 1, Max: 3, Value: "foo"},
 			},
 			i:         0,
 			j:         1,
@@ -113,16 +113,16 @@ func TestRangesSwap(t *testing.T) {
 		{
 			name: "ThreeElements",
 			ranges: tktypes.Ranges{
-				tktypes.Range{Min: 1, Max: 3, Value: "foo"},
-				tktypes.Range{Min: 2, Max: 5, Value: "baz"},
-				tktypes.Range{Min: 5, Max: 7, Value: "bar"},
+				{Min: 1, Max: 3, Value: "foo"},
+				{Min: 2, Max: 5, Value: "baz"},
+				{Min: 5, Max: 7, Value: "bar"},
 			},
 			i: 0,
 			j: 1,
 			want: tktypes.Ranges{
-				tktypes.Range{Min: 2, Max: 5, Value: "baz"},
-				tktypes.Range{Min: 1, Max: 3, Value: "foo"},
-				tktypes.Range{Min: 5, Max: 7, Value: "bar"},
+				{Min: 2, Max: 5, Value: "baz"},
+				{Min: 1, Max: 3, Value: "foo"},
+				{Min: 5, Max: 7, Value: "bar"},
 			},
 			wantPanic: false,
 		},
@@ -156,14 +156,14 @@ func TestRangesSort(t *testing.T) {
 		{
 			name: "ThreeElements",
 			ranges: tktypes.Ranges{
-				tktypes.Range{Min: 2, Max: 5, Value: "baz"},
-				tktypes.Range{Min: 5, Max: 7, Value: "bar"},
-				tktypes.Range{Min: 1, Max: 3, Value: "foo"},
+				{Min: 2, Max: 5, Value: "baz"},
+				{Min: 5, Max: 7, Value: "bar"},
+				{Min: 1, Max: 3, Value: "foo"},
 			},
 			want: tktypes.Ranges{
-				tktypes.Range{Min: 1, Max: 3, Value: "foo"},
-				tktypes.Range{Min: 2, Max: 5, Value: "baz"},
-				tktypes.Range{Min: 5, Max: 7, Value: "bar"},
+				{Min: 1, Max: 3, Value: "foo"},
+				{Min: 2, Max: 5, Value: "baz"},
+				{Min: 5, Max: 7, Value: "bar"},
 			},
 		},
 	}
@@ -193,9 +193,9 @@ func TestRangesSearch(t *testing.T) {
 		{
 			name: "ThreeElementsNotFound",
 			ranges: tktypes.Ranges{
-				tktypes.Range{Min: 1, Max: 3, Value: "foo"},
-				tktypes.Range{Min: 2, Max: 5, Value: "baz"},
-				tktypes.Range{Min: 5, Max: 7, Value: "bar"},
+				{Min: 1, Max: 3, Value: "foo"},
+				{Min: 2, Max: 5, Value: "baz"},
+				{Min: 5, Max: 7, Value: "bar"},
 			},
 			v:    0,
 			want: nil,
@@ -203,9 +203,9 @@ func TestRangesSearch(t *testing.T) {
 		{
 			name: "ThreeElementsOne",
 			ranges: tktypes.Ranges{
-				tktypes.Range{Min: 1, Max: 3, Value: "foo"},
-				tktypes.Range{Min: 2, Max: 5, Value: "baz"},
-				tktypes.Range{Min: 5, Max: 7, Value: "bar"},
+				{Min: 1, Max: 3, Value: "foo"},
+				{Min: 2, Max: 5, Value: "baz"},
+				{Min: 5, Max: 7, Value: "bar"},
 			},
 			v:    1,
 			want: "foo",
@@ -213,9 +213,9 @@ func TestRangesSearch(t *testing.T) {
 		{
 			name: "ThreeElementsTwo",
 			ranges: tktypes.Ranges{
-				tktypes.Range{Min: 1, Max: 3, Value: "foo"},
-				tktypes.Range{Min: 2, Max: 5, Value: "baz"},
-				tktypes.Range{Min: 5, Max: 7, Value: "bar"},
+				{Min: 1, Max: 3, Value: "foo"},
+				{Min: 2, Max: 5, Value: "baz"},
+				{Min: 5, Max: 7, Value: "bar"},
 			},
 			v:    2,
 			want: "foo",
@@ -223,9 +223,9 @@ func TestRangesSearch(t *testing.T) {
 		{
 			name: "ThreeElementsFour",
 			ranges: tktypes.Ranges{
-				tktypes.Range{Min: 1, Max: 3, Value: "foo"},
-				tktypes.Range{Min: 2, Max: 5, Value: "baz"},
-				tktypes.Range{Min: 5, Max: 7, Value: "bar"},
+				{Min: 1, Max: 3, Value: "foo"},
+				{Min: 2, Max: 5, Value: "baz"},
+				{Min: 5, Max: 7, Value: "bar"},
 			},
 			v:    4,
 			want: "baz",
@@ -233,9 +233,9 @@ func TestRangesSearch(t *testing.T) {
 		{
 			name: "ThreeElementsFive",
 			ranges: tktypes.Ranges{
-				tktypes.Range{Min: 1, Max: 3, Value: "foo"},
-				tktypes.Range{Min: 2, Max: 5, Value: "baz"},
-				tktypes.Range{Min: 5, Max: 7, Value: "bar"},
+				{Min: 1, Max: 3, Value: "foo"},
+				{Min: 2, Max: 5, Value: "baz"},
+				{Min: 5, Max: 7, Value: "bar"},
 			},
 			v:    5,
 			want: "baz",
@@ -243,9 +243,9 @@ func TestRangesSearch(t *testing.T) {
 		{
 			name: "ThreeElementsSix",
 			ranges: tktypes.Ranges{
-				tktypes.Range{Min: 1, Max: 3, Value: "foo"},
-				tktypes.Range{Min: 2, Max: 5, Value: "baz"},
-				tktypes.Range{Min: 5, Max: 7, Value: "bar"},
+				{Min: 1, Max: 3, Value: "foo"},
+				{Min: 2, Max: 5, Value: "baz"},
+				{Min: 5, Max: 7, Value: "bar"},
 			},
 			v:    6,
 			want: "bar",
@@ -253,9 +253,9 @@ func TestRangesSearch(t *testing.T) {
 		{
 			name: "ThreeElementsEight",
 			ranges: tktypes.Ranges{
-				tktypes.Range{Min: 1, Max: 3, Value: "foo"},
-				tktypes.Range{Min: 2, Max: 5, Value: "baz"},
-				tktypes.Range{Min: 5, Max: 7, Value: "bar"},
+				{Min: 1, Max: 3, Value: "foo"},
+				{Min: 2, Max: 5, Value: "baz"},
+				{Min: 5, Max: 7, Value: "bar"},
 			},
 			v:    8,
 			want: nil,
