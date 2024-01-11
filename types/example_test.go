@@ -69,7 +69,7 @@ func ExampleBareRange_MarshalText() {
 }
 
 func ExampleBareRange_UnmarshalText() {
-	for _, t := range []string{":10", "20:30", "40:"} {
+	for _, t := range []string{":10", "20:30", "40:", "50", ":"} {
 		var r tktypes.BareRange
 		if err := r.UnmarshalText([]byte(t)); err != nil {
 			panic(err)
@@ -82,6 +82,8 @@ func ExampleBareRange_UnmarshalText() {
 	// {-9223372036854775808 10 {}}
 	// {20 30 {}}
 	// {40 9223372036854775807 {}}
+	// {50 50 {}}
+	// {-9223372036854775808 9223372036854775807 {}}
 }
 
 func ExampleBareRanges_MarshalText() {
