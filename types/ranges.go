@@ -4,6 +4,7 @@
 package types
 
 import (
+	"bytes"
 	"fmt"
 	"math"
 	"sort"
@@ -174,5 +175,16 @@ func (r BareRanges) MarshalText() ([]byte, error) {
 // UnmarshalText implements [encoding.TextUnmarshaler] for a collection of bare ranges.
 // It accepts any slice of bytes produced by [BareRanges.MarshalText].
 func (r *BareRanges) UnmarshalText(b []byte) error {
+	*r = BareRanges{}
+
+	for _, p := range bytes.Split(b, []byte{','}) {
+		var br BareRange
+		if err := br.UnmarshalText(p); err != nil {
+			return fmt.Errorf("%q: unmarshal text: %w", string(p), err)
+		}
+
+		*r = append(*r, br)
+	}
+
 	return nil
 }

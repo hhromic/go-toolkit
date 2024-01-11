@@ -105,3 +105,18 @@ func ExampleBareRanges_MarshalText() {
 	// Output:
 	// :10,20:30,40:,50,:
 }
+
+//nolint:lll
+func ExampleBareRanges_UnmarshalText() {
+	t := ":10,20:30,40:,50,:"
+
+	var r tktypes.BareRanges
+	if err := r.UnmarshalText([]byte(t)); err != nil {
+		panic(err)
+	}
+
+	fmt.Println(r)
+
+	// Output:
+	// [{-9223372036854775808 10 {}} {20 30 {}} {40 9223372036854775807 {}} {50 50 {}} {-9223372036854775808 9223372036854775807 {}}]
+}
