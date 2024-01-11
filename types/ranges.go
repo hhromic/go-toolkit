@@ -152,7 +152,7 @@ type BareRanges = Ranges
 // The output format is "bare-range,bare-range,..." where each bare range is formatted
 // using the output of [BareRange.MarshalText].
 func (r BareRanges) MarshalText() ([]byte, error) {
-	var out []byte
+	out := []byte{}
 
 	const sep = byte(',')
 
