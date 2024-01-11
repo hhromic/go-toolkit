@@ -102,7 +102,7 @@ func (r BareRange) MarshalText() ([]byte, error) {
 	return []byte(out), nil
 }
 
-// UnmarshalText implements [encoding.TextUnmarshaler].
+// UnmarshalText implements [encoding.TextUnmarshaler] for a bare range.
 // It accepts any slice of bytes produced by [BareRange.MarshalText].
 func (r *BareRange) UnmarshalText(b []byte) error {
 	str := string(b)
@@ -141,5 +141,38 @@ func (r *BareRange) UnmarshalText(b []byte) error {
 		return fmt.Errorf("%q: %w", str, ErrUnknownFormat)
 	}
 
+	return nil
+}
+
+// BareRanges is an alias for marshaling/unmarshaling collections of bare ranges.
+type BareRanges = Ranges
+
+// MarshalText implements [encoding.TextMarshaler] for a collection of bare ranges.
+// The output format is "bare-range,bare-range,..." where each bare range is formatted
+// using the output of [BareRange.MarshalText].
+func (r BareRanges) MarshalText() ([]byte, error) {
+	var out []byte
+
+	const sep = byte(',')
+
+	for idx := 0; idx < r.Len(); idx++ {
+		b, err := r[idx].MarshalText()
+		if err != nil {
+			return nil, fmt.Errorf("bare range %d: marshal text: %w", idx, err)
+		}
+
+		out = append(out, b...)
+
+		if idx < r.Len()-1 {
+			out = append(out, sep)
+		}
+	}
+
+	return out, nil
+}
+
+// UnmarshalText implements [encoding.TextUnmarshaler] for a collection of bare ranges.
+// It accepts any slice of bytes produced by [BareRanges.MarshalText].
+func (r *BareRanges) UnmarshalText(b []byte) error {
 	return nil
 }
