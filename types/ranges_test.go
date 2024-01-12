@@ -377,3 +377,100 @@ func TestBareRangeUnmarshalText(t *testing.T) {
 		})
 	}
 }
+
+func TestBareRangesMarshalText(t *testing.T) {
+	testCases := []struct {
+		name    string
+		ranges  tktypes.BareRanges
+		want    []byte
+		wantErr error
+	}{
+		{
+			name:    "Empty",
+			ranges:  tktypes.BareRanges{},
+			want:    []byte(""),
+			wantErr: nil,
+		},
+		{
+			name: "OneElement",
+			ranges: tktypes.BareRanges{
+				{Min: 10, Max: 20, Value: struct{}{}},
+			},
+			want:    []byte("10:20"),
+			wantErr: nil,
+		},
+		{
+			name: "ThreeElements",
+			ranges: tktypes.BareRanges{
+				{Min: tktypes.RangeMin, Max: 10, Value: struct{}{}},
+				{Min: 20, Max: 30, Value: struct{}{}},
+				{Min: 40, Max: tktypes.RangeMax, Value: struct{}{}},
+			},
+			want:    []byte(":10,20:30,40:"),
+			wantErr: nil,
+		},
+	}
+
+	for _, tc := range testCases { //nolint:varnamelen
+		t.Run(tc.name, func(t *testing.T) {
+			b, err := tc.ranges.MarshalText()
+			require.ErrorIs(t, err, tc.wantErr)
+
+			if tc.wantErr == nil {
+				assert.Equal(t, tc.want, b)
+			}
+		})
+	}
+}
+
+func TestBareRangesUnmarshalText(t *testing.T) {
+	testCases := []struct {
+		name    string
+		b       []byte
+		want    tktypes.BareRanges
+		wantErr error
+	}{
+		{
+			name:    "Empty",
+			b:       []byte(""),
+			want:    tktypes.BareRanges{},
+			wantErr: nil,
+		},
+		{
+			name: "OneElement",
+			b:    []byte("10:20"),
+			want: tktypes.BareRanges{
+				{Min: 10, Max: 20, Value: struct{}{}},
+			},
+			wantErr: nil,
+		},
+		{
+			name: "ThreeElements",
+			b:    []byte(":10,20:30,40:"),
+			want: tktypes.BareRanges{
+				{Min: tktypes.RangeMin, Max: 10, Value: struct{}{}},
+				{Min: 20, Max: 30, Value: struct{}{}},
+				{Min: 40, Max: tktypes.RangeMax, Value: struct{}{}},
+			},
+			wantErr: nil,
+		},
+		{
+			name:    "InvalidFormat",
+			b:       []byte(":10;20:30;40:"),
+			want:    tktypes.BareRanges{},
+			wantErr: tktypes.ErrUnknownFormat,
+		},
+	}
+
+	for _, tc := range testCases { //nolint:varnamelen
+		t.Run(tc.name, func(t *testing.T) {
+			var ranges tktypes.BareRanges
+			err := ranges.UnmarshalText(tc.b)
+			require.ErrorIs(t, err, tc.wantErr)
+
+			if tc.wantErr == nil {
+				assert.Equal(t, tc.want, ranges)
+			}
+		})
+	}
+}
