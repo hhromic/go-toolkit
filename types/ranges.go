@@ -177,13 +177,15 @@ func (r BareRanges) MarshalText() ([]byte, error) {
 func (r *BareRanges) UnmarshalText(b []byte) error {
 	*r = BareRanges{}
 
-	for _, p := range bytes.Split(b, []byte{','}) {
-		var br BareRange
-		if err := br.UnmarshalText(p); err != nil {
-			return fmt.Errorf("%q: unmarshal text: %w", string(p), err)
-		}
+	if len(b) > 0 {
+		for _, p := range bytes.Split(b, []byte{','}) {
+			var br BareRange
+			if err := br.UnmarshalText(p); err != nil {
+				return fmt.Errorf("%q: unmarshal text: %w", string(p), err)
+			}
 
-		*r = append(*r, br)
+			*r = append(*r, br)
+		}
 	}
 
 	return nil
