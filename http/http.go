@@ -19,7 +19,7 @@ func RunServer(ctx context.Context, srv *http.Server, timeout time.Duration) err
 
 	go waitAndShutdown(ctx, srv, timeout, done, err)
 
-	if err := srv.ListenAndServe(); !errors.Is(err, http.ErrServerClosed) {
+	if err := srv.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
 		return fmt.Errorf("listen and serve: %w", err)
 	}
 
@@ -40,7 +40,7 @@ func RunServerTLS(ctx context.Context, srv *http.Server, certFile, keyFile strin
 
 	go waitAndShutdown(ctx, srv, timeout, done, err)
 
-	if err := srv.ListenAndServeTLS(certFile, keyFile); !errors.Is(err, http.ErrServerClosed) {
+	if err := srv.ListenAndServeTLS(certFile, keyFile); err != nil && !errors.Is(err, http.ErrServerClosed) {
 		return fmt.Errorf("listen and serve TLS: %w", err)
 	}
 
