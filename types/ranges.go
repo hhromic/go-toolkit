@@ -118,7 +118,7 @@ func (r *BareRange) UnmarshalText(b []byte) error {
 	case 1:
 		var min, max int64
 
-		parts := strings.SplitN(str, ":", 2) //nolint:gomnd
+		parts := strings.SplitN(str, ":", 2) //nolint:mnd
 		if parts[0] == "" {
 			min = RangeMin
 		} else {
