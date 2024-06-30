@@ -4,6 +4,7 @@
 package types_test
 
 import (
+	"strconv"
 	"testing"
 
 	tktypes "github.com/hhromic/go-toolkit/types"
@@ -320,6 +321,7 @@ func TestBareRangeMarshalText(t *testing.T) {
 	}
 }
 
+//nolint:funlen
 func TestBareRangeUnmarshalText(t *testing.T) {
 	testCases := []struct {
 		name    string
@@ -362,6 +364,18 @@ func TestBareRangeUnmarshalText(t *testing.T) {
 			b:       []byte("foo::bar"),
 			want:    tktypes.BareRange{}, //nolint:exhaustruct
 			wantErr: tktypes.ErrUnknownFormat,
+		},
+		{
+			name:    "InvalidSyntaxSingle",
+			b:       []byte("foo"),
+			want:    tktypes.BareRange{}, //nolint:exhaustruct
+			wantErr: strconv.ErrSyntax,
+		},
+		{
+			name:    "InvalidSyntaxRange",
+			b:       []byte("foo:bar"),
+			want:    tktypes.BareRange{}, //nolint:exhaustruct
+			wantErr: strconv.ErrSyntax,
 		},
 	}
 
@@ -459,6 +473,12 @@ func TestBareRangesUnmarshalText(t *testing.T) {
 			b:       []byte(":10;20:30;40:"),
 			want:    tktypes.BareRanges{},
 			wantErr: tktypes.ErrUnknownFormat,
+		},
+		{
+			name:    "InvalidSyntax",
+			b:       []byte(":bar,foo:30,40:"),
+			want:    tktypes.BareRanges{},
+			wantErr: strconv.ErrSyntax,
 		},
 	}
 
