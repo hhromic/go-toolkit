@@ -41,6 +41,11 @@ func TestHandlerString(t *testing.T) {
 			handler: tkslog.HandlerAuto,
 			want:    "auto",
 		},
+		{
+			name:    "InvalidHandler",
+			handler: -1,
+			want:    "",
+		},
 	}
 
 	for _, tc := range testCases {
@@ -79,6 +84,12 @@ func TestHandlerMarshalText(t *testing.T) {
 			name:    "HandlerAuto",
 			handler: tkslog.HandlerAuto,
 			want:    []byte("auto"),
+			wantErr: nil,
+		},
+		{
+			name:    "InvalidHandler",
+			handler: -1,
+			want:    []byte(""),
 			wantErr: nil,
 		},
 	}
@@ -215,4 +226,10 @@ func TestNewSlogLogger(t *testing.T) {
 			assert.Regexp(t, tc.want, buf.String())
 		})
 	}
+
+	t.Run("InvalidHandler", func(t *testing.T) {
+		var buf bytes.Buffer
+		l := tkslog.NewSlogLogger(&buf, -1, slog.LevelDebug)
+		assert.Nil(t, l)
+	})
 }
