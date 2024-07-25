@@ -84,6 +84,7 @@ type BareRange = Range
 // The output format is "min:max". If min or max are [RangeMin] or [RangeMax] respectively,
 // then their values are omitted in the output: ":max", "min:" or ":".
 // If min and max are equal, then only min is used in the output with no separator: "min".
+// This function never returns errors.
 func (r BareRange) MarshalText() ([]byte, error) {
 	var out string
 
@@ -150,18 +151,14 @@ type BareRanges = Ranges
 
 // MarshalText implements [encoding.TextMarshaler] for a collection of bare ranges.
 // The output format is "bare-range,bare-range,..." where each bare range is formatted
-// using the output of [BareRange.MarshalText].
+// using the output of [BareRange.MarshalText]. This function never returns errors.
 func (r BareRanges) MarshalText() ([]byte, error) {
 	out := []byte{}
 
 	const sep = byte(',')
 
 	for idx := 0; idx < r.Len(); idx++ {
-		b, err := r[idx].MarshalText()
-		if err != nil {
-			return nil, fmt.Errorf("bare range %d: marshal text: %w", idx, err)
-		}
-
+		b, _ := r[idx].MarshalText()
 		out = append(out, b...)
 
 		if idx < r.Len()-1 {
