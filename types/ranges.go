@@ -117,28 +117,28 @@ func (r *BareRange) UnmarshalText(b []byte) error {
 
 		*r = Range{Min: int(n), Max: int(n), Value: struct{}{}}
 	case 1:
-		var min, max int64
+		var rmin, rmax int64
 
 		parts := strings.SplitN(str, ":", 2) //nolint:mnd
 		if parts[0] == "" {
-			min = RangeMin
+			rmin = RangeMin
 		} else {
 			var err error
-			if min, err = strconv.ParseInt(parts[0], 10, 0); err != nil {
+			if rmin, err = strconv.ParseInt(parts[0], 10, 0); err != nil {
 				return fmt.Errorf("%q: parse int: %w", parts[0], err)
 			}
 		}
 
 		if parts[1] == "" {
-			max = RangeMax
+			rmax = RangeMax
 		} else {
 			var err error
-			if max, err = strconv.ParseInt(parts[1], 10, 0); err != nil {
+			if rmax, err = strconv.ParseInt(parts[1], 10, 0); err != nil {
 				return fmt.Errorf("%q: parse int: %w", parts[1], err)
 			}
 		}
 
-		*r = Range{Min: int(min), Max: int(max), Value: struct{}{}}
+		*r = Range{Min: int(rmin), Max: int(rmax), Value: struct{}{}}
 	default:
 		return fmt.Errorf("%q: %w", str, ErrUnknownFormat)
 	}
