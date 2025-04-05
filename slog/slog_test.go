@@ -48,9 +48,9 @@ func TestHandlerString(t *testing.T) {
 		},
 	}
 
-	for _, tc := range testCases {
-		t.Run(tc.name, func(t *testing.T) {
-			assert.Equal(t, tc.want, tc.handler.String())
+	for _, tCase := range testCases {
+		t.Run(tCase.name, func(t *testing.T) {
+			assert.Equal(t, tCase.want, tCase.handler.String())
 		})
 	}
 }
@@ -94,13 +94,13 @@ func TestHandlerMarshalText(t *testing.T) {
 		},
 	}
 
-	for _, tc := range testCases { //nolint:varnamelen
-		t.Run(tc.name, func(t *testing.T) {
-			b, err := tc.handler.MarshalText()
-			require.ErrorIs(t, err, tc.wantErr)
+	for _, tCase := range testCases {
+		t.Run(tCase.name, func(t *testing.T) {
+			b, err := tCase.handler.MarshalText()
+			require.ErrorIs(t, err, tCase.wantErr)
 
-			if tc.wantErr == nil {
-				assert.Equal(t, tc.want, b)
+			if tCase.wantErr == nil {
+				assert.Equal(t, tCase.want, b)
 			}
 		})
 	}
@@ -145,14 +145,14 @@ func TestHandlerUnmarshalText(t *testing.T) {
 		},
 	}
 
-	for _, tc := range testCases { //nolint:varnamelen
-		t.Run(tc.name, func(t *testing.T) {
+	for _, tCase := range testCases {
+		t.Run(tCase.name, func(t *testing.T) {
 			var h tkslog.Handler
-			err := h.UnmarshalText(tc.b)
-			require.ErrorIs(t, err, tc.wantErr)
+			err := h.UnmarshalText(tCase.b)
+			require.ErrorIs(t, err, tCase.wantErr)
 
-			if tc.wantErr == nil {
-				assert.Equal(t, tc.want, h)
+			if tCase.wantErr == nil {
+				assert.Equal(t, tCase.want, h)
 			}
 		})
 	}
@@ -185,7 +185,9 @@ func TestNewSlogLogger(t *testing.T) {
 			logLevel: slog.LevelInfo,
 			logMsg:   "message",
 			logArgs:  []any{"key1", "val1", "key2", "val2"},
-			want:     regexp.MustCompile(`^{"ts":".+","level":"INFO","msg":"message","key1":"val1","key2":"val2"}\n$`),
+			want: regexp.MustCompile(
+				`^{"ts":".+","level":"INFO","msg":"message","key1":"val1","key2":"val2"}\n$`,
+			),
 		},
 		{
 			name:     "HandlerTint-Debug-Warn",
@@ -194,7 +196,9 @@ func TestNewSlogLogger(t *testing.T) {
 			logLevel: slog.LevelWarn,
 			logMsg:   "message",
 			logArgs:  []any{"key1", "val1", "key2", "val2"},
-			want:     regexp.MustCompile(`^\x1b\[2m.+\x1b\[0m \x1b\[93mWRN\x1b\[0m message \x1b\[2mkey1=\x1b\[0mval1 \x1b\[2mkey2=\x1b\[0mval2\n$`), //nolint:lll
+			want: regexp.MustCompile(
+				`^\x1b\[2m.+\x1b\[0m \x1b\[93mWRN\x1b\[0m message \x1b\[2mkey1=\x1b\[0mval1 \x1b\[2mkey2=\x1b\[0mval2\n$`,
+			),
 		},
 		{
 			name:     "HandlerAuto-Debug-Error",
@@ -216,14 +220,14 @@ func TestNewSlogLogger(t *testing.T) {
 		},
 	}
 
-	for _, tc := range testCases { //nolint:varnamelen
-		t.Run(tc.name, func(t *testing.T) {
+	for _, tCase := range testCases {
+		t.Run(tCase.name, func(t *testing.T) {
 			var buf bytes.Buffer
-			l := tkslog.NewSlogLogger(&buf, tc.handler, tc.leveler)
+			l := tkslog.NewSlogLogger(&buf, tCase.handler, tCase.leveler)
 			require.NotNil(t, l)
 
-			l.Log(context.Background(), tc.logLevel, tc.logMsg, tc.logArgs...)
-			assert.Regexp(t, tc.want, buf.String())
+			l.Log(context.Background(), tCase.logLevel, tCase.logMsg, tCase.logArgs...)
+			assert.Regexp(t, tCase.want, buf.String())
 		})
 	}
 

@@ -17,6 +17,7 @@ func ExampleHandler_String() {
 	// Output: text
 }
 
+//nolint:staticcheck
 func ExampleHandler_MarshalText() {
 	h := tkslog.HandlerText
 

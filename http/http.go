@@ -34,13 +34,19 @@ func RunServer(ctx context.Context, srv *http.Server, timeout time.Duration) err
 
 // RunServerTLS calls srv.ListenAndServeTLS and waits for the context to be done.
 // When the context is done, it gracefully shuts down the server with a timeout.
-func RunServerTLS(ctx context.Context, srv *http.Server, certFile, keyFile string, timeout time.Duration) error {
+func RunServerTLS(
+	ctx context.Context,
+	srv *http.Server,
+	certFile, keyFile string,
+	timeout time.Duration,
+) error {
 	done := make(chan struct{}, 1)
 	err := make(chan error, 1)
 
 	go waitAndShutdown(ctx, srv, timeout, done, err)
 
-	if err := srv.ListenAndServeTLS(certFile, keyFile); err != nil && !errors.Is(err, http.ErrServerClosed) {
+	if err := srv.ListenAndServeTLS(certFile, keyFile); err != nil &&
+		!errors.Is(err, http.ErrServerClosed) {
 		return fmt.Errorf("listen and serve TLS: %w", err)
 	}
 

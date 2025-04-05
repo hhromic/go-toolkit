@@ -16,6 +16,8 @@ import (
 )
 
 // Handler represents a supported slog handler.
+//
+//nolint:recvcheck
 type Handler int
 
 // Supported slog handlers.

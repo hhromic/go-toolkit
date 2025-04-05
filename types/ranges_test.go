@@ -33,9 +33,9 @@ func TestRangesLen(t *testing.T) {
 		},
 	}
 
-	for _, tc := range testCases {
-		t.Run(tc.name, func(t *testing.T) {
-			assert.Equal(t, tc.want, tc.ranges.Len())
+	for _, tCase := range testCases {
+		t.Run(tCase.name, func(t *testing.T) {
+			assert.Equal(t, tCase.want, tCase.ranges.Len())
 		})
 	}
 }
@@ -82,14 +82,14 @@ func TestRangesLess(t *testing.T) {
 		},
 	}
 
-	for _, tc := range testCases { //nolint:varnamelen
-		t.Run(tc.name, func(t *testing.T) {
-			if tc.wantPanic {
+	for _, tCase := range testCases {
+		t.Run(tCase.name, func(t *testing.T) {
+			if tCase.wantPanic {
 				assert.Panics(t, func() {
-					tc.ranges.Less(tc.i, tc.j)
+					tCase.ranges.Less(tCase.i, tCase.j)
 				})
 			} else {
-				assert.Equal(t, tc.want, tc.ranges.Less(tc.i, tc.j))
+				assert.Equal(t, tCase.want, tCase.ranges.Less(tCase.i, tCase.j))
 			}
 		})
 	}
@@ -129,15 +129,15 @@ func TestRangesSwap(t *testing.T) {
 		},
 	}
 
-	for _, tc := range testCases { //nolint:varnamelen
-		t.Run(tc.name, func(t *testing.T) {
-			if tc.wantPanic {
+	for _, tCase := range testCases {
+		t.Run(tCase.name, func(t *testing.T) {
+			if tCase.wantPanic {
 				assert.Panics(t, func() {
-					tc.ranges.Swap(tc.i, tc.j)
+					tCase.ranges.Swap(tCase.i, tCase.j)
 				})
 			} else {
-				tc.ranges.Swap(tc.i, tc.j)
-				assert.Equal(t, tc.want, tc.ranges)
+				tCase.ranges.Swap(tCase.i, tCase.j)
+				assert.Equal(t, tCase.want, tCase.ranges)
 			}
 		})
 	}
@@ -169,10 +169,10 @@ func TestRangesSort(t *testing.T) {
 		},
 	}
 
-	for _, tc := range testCases {
-		t.Run(tc.name, func(t *testing.T) {
-			tc.ranges.Sort()
-			assert.Equal(t, tc.want, tc.ranges)
+	for _, tCase := range testCases {
+		t.Run(tCase.name, func(t *testing.T) {
+			tCase.ranges.Sort()
+			assert.Equal(t, tCase.want, tCase.ranges)
 		})
 	}
 }
@@ -263,9 +263,9 @@ func TestRangesSearch(t *testing.T) {
 		},
 	}
 
-	for _, tc := range testCases {
-		t.Run(tc.name, func(t *testing.T) {
-			assert.Equal(t, tc.want, tc.ranges.Search(tc.v))
+	for _, tCase := range testCases {
+		t.Run(tCase.name, func(t *testing.T) {
+			assert.Equal(t, tCase.want, tCase.ranges.Search(tCase.v))
 		})
 	}
 }
@@ -302,20 +302,24 @@ func TestBareRangeMarshalText(t *testing.T) {
 			wantErr: nil,
 		},
 		{
-			name:    "FullRange",
-			r:       tktypes.BareRange{Min: tktypes.RangeMin, Max: tktypes.RangeMax, Value: struct{}{}},
+			name: "FullRange",
+			r: tktypes.BareRange{
+				Min:   tktypes.RangeMin,
+				Max:   tktypes.RangeMax,
+				Value: struct{}{},
+			},
 			want:    []byte(":"),
 			wantErr: nil,
 		},
 	}
 
-	for _, tc := range testCases { //nolint:varnamelen
-		t.Run(tc.name, func(t *testing.T) {
-			b, err := tc.r.MarshalText()
-			require.ErrorIs(t, err, tc.wantErr)
+	for _, tCase := range testCases {
+		t.Run(tCase.name, func(t *testing.T) {
+			b, err := tCase.r.MarshalText()
+			require.ErrorIs(t, err, tCase.wantErr)
 
-			if tc.wantErr == nil {
-				assert.Equal(t, tc.want, b)
+			if tCase.wantErr == nil {
+				assert.Equal(t, tCase.want, b)
 			}
 		})
 	}
@@ -354,9 +358,13 @@ func TestBareRangeUnmarshalText(t *testing.T) {
 			wantErr: nil,
 		},
 		{
-			name:    "FullRange",
-			b:       []byte(":"),
-			want:    tktypes.BareRange{Min: tktypes.RangeMin, Max: tktypes.RangeMax, Value: struct{}{}},
+			name: "FullRange",
+			b:    []byte(":"),
+			want: tktypes.BareRange{
+				Min:   tktypes.RangeMin,
+				Max:   tktypes.RangeMax,
+				Value: struct{}{},
+			},
 			wantErr: nil,
 		},
 		{
@@ -379,14 +387,14 @@ func TestBareRangeUnmarshalText(t *testing.T) {
 		},
 	}
 
-	for _, tc := range testCases { //nolint:varnamelen
-		t.Run(tc.name, func(t *testing.T) {
+	for _, tCase := range testCases {
+		t.Run(tCase.name, func(t *testing.T) {
 			var r tktypes.BareRange
-			err := r.UnmarshalText(tc.b)
-			require.ErrorIs(t, err, tc.wantErr)
+			err := r.UnmarshalText(tCase.b)
+			require.ErrorIs(t, err, tCase.wantErr)
 
-			if tc.wantErr == nil {
-				assert.Equal(t, tc.want, r)
+			if tCase.wantErr == nil {
+				assert.Equal(t, tCase.want, r)
 			}
 		})
 	}
@@ -425,13 +433,13 @@ func TestBareRangesMarshalText(t *testing.T) {
 		},
 	}
 
-	for _, tc := range testCases { //nolint:varnamelen
-		t.Run(tc.name, func(t *testing.T) {
-			b, err := tc.ranges.MarshalText()
-			require.ErrorIs(t, err, tc.wantErr)
+	for _, tCase := range testCases {
+		t.Run(tCase.name, func(t *testing.T) {
+			b, err := tCase.ranges.MarshalText()
+			require.ErrorIs(t, err, tCase.wantErr)
 
-			if tc.wantErr == nil {
-				assert.Equal(t, tc.want, b)
+			if tCase.wantErr == nil {
+				assert.Equal(t, tCase.want, b)
 			}
 		})
 	}
@@ -482,14 +490,14 @@ func TestBareRangesUnmarshalText(t *testing.T) {
 		},
 	}
 
-	for _, tc := range testCases { //nolint:varnamelen
-		t.Run(tc.name, func(t *testing.T) {
+	for _, tCase := range testCases {
+		t.Run(tCase.name, func(t *testing.T) {
 			var ranges tktypes.BareRanges
-			err := ranges.UnmarshalText(tc.b)
-			require.ErrorIs(t, err, tc.wantErr)
+			err := ranges.UnmarshalText(tCase.b)
+			require.ErrorIs(t, err, tCase.wantErr)
 
-			if tc.wantErr == nil {
-				assert.Equal(t, tc.want, ranges)
+			if tCase.wantErr == nil {
+				assert.Equal(t, tCase.want, ranges)
 			}
 		})
 	}
