@@ -21,3 +21,6 @@ formatters:
     - gofumpt
     - goimports
     - golines
+  settings:
+    golines:
+      reformat-tags: false
