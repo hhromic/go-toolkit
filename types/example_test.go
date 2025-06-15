@@ -29,7 +29,7 @@ func ExampleRanges_Search() {
 		{Min: 4, Max: 4, Value: "cat"},
 	}
 
-	for i := 0; i < 6; i++ {
+	for i := range 6 {
 		fmt.Printf("value %d belongs to %v\n", i, ranges.Search(i))
 	}
 

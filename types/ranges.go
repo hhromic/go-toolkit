@@ -157,7 +157,7 @@ func (r BareRanges) MarshalText() ([]byte, error) {
 
 	const sep = byte(',')
 
-	for idx := 0; idx < r.Len(); idx++ {
+	for idx := range r.Len() {
 		b, _ := r[idx].MarshalText()
 		out = append(out, b...)
 
