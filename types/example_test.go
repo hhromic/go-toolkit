@@ -70,12 +70,14 @@ func ExampleBareRange_MarshalText() {
 
 func ExampleBareRange_UnmarshalText() {
 	for _, t := range []string{":10", "20:30", "40:", "50", ":"} {
-		var r tktypes.BareRange
-		if err := r.UnmarshalText([]byte(t)); err != nil {
+		var rng tktypes.BareRange
+
+		err := rng.UnmarshalText([]byte(t))
+		if err != nil {
 			panic(err)
 		}
 
-		fmt.Println(r)
+		fmt.Println(rng)
 	}
 
 	// Output:
@@ -110,12 +112,14 @@ func ExampleBareRanges_MarshalText() {
 func ExampleBareRanges_UnmarshalText() {
 	t := ":10,20:30,40:,50,:"
 
-	var r tktypes.BareRanges
-	if err := r.UnmarshalText([]byte(t)); err != nil {
+	var rngs tktypes.BareRanges
+
+	err := rngs.UnmarshalText([]byte(t))
+	if err != nil {
 		panic(err)
 	}
 
-	fmt.Println(r)
+	fmt.Println(rngs)
 
 	// Output:
 	// [{-9223372036854775808 10 {}} {20 30 {}} {40 9223372036854775807 {}} {50 50 {}} {-9223372036854775808 9223372036854775807 {}}]

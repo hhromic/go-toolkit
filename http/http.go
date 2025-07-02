@@ -14,18 +14,20 @@ import (
 // RunServer calls srv.ListenAndServe and waits for the context to be done.
 // When the context is done, it gracefully shuts down the server with a timeout.
 func RunServer(ctx context.Context, srv *http.Server, timeout time.Duration) error {
-	done := make(chan struct{}, 1)
-	err := make(chan error, 1)
+	doneCh := make(chan struct{}, 1)
+	errCh := make(chan error, 1)
 
-	go waitAndShutdown(ctx, srv, timeout, done, err)
+	go waitAndShutdown(ctx, srv, timeout, doneCh, errCh)
 
-	if err := srv.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
+	err := srv.ListenAndServe()
+	if err != nil && !errors.Is(err, http.ErrServerClosed) {
 		return fmt.Errorf("listen and serve: %w", err)
 	}
 
-	<-done
+	<-doneCh
 
-	if err := <-err; err != nil {
+	err = <-errCh
+	if err != nil {
 		return fmt.Errorf("shutdown: %w", err)
 	}
 
@@ -40,19 +42,20 @@ func RunServerTLS(
 	certFile, keyFile string,
 	timeout time.Duration,
 ) error {
-	done := make(chan struct{}, 1)
-	err := make(chan error, 1)
+	doneCh := make(chan struct{}, 1)
+	errCh := make(chan error, 1)
 
-	go waitAndShutdown(ctx, srv, timeout, done, err)
+	go waitAndShutdown(ctx, srv, timeout, doneCh, errCh)
 
-	if err := srv.ListenAndServeTLS(certFile, keyFile); err != nil &&
-		!errors.Is(err, http.ErrServerClosed) {
+	err := srv.ListenAndServeTLS(certFile, keyFile)
+	if err != nil && !errors.Is(err, http.ErrServerClosed) {
 		return fmt.Errorf("listen and serve TLS: %w", err)
 	}
 
-	<-done
+	<-doneCh
 
-	if err := <-err; err != nil {
+	err = <-errCh
+	if err != nil {
 		return fmt.Errorf("shutdown: %w", err)
 	}
 
@@ -63,16 +66,16 @@ func waitAndShutdown(
 	ctx context.Context,
 	srv *http.Server,
 	timeout time.Duration,
-	done chan<- struct{},
-	err chan<- error,
+	doneCh chan<- struct{},
+	errCh chan<- error,
 ) {
-	defer close(err)
-	defer close(done)
+	defer close(errCh)
+	defer close(doneCh)
 
 	<-ctx.Done()
 
 	ctx, cancel := context.WithTimeout(context.Background(), timeout)
 	defer cancel()
 
-	err <- srv.Shutdown(ctx) //nolint:contextcheck
+	errCh <- srv.Shutdown(ctx) //nolint:contextcheck
 }

@@ -33,12 +33,14 @@ func ExampleHandler_MarshalText() {
 func ExampleHandler_UnmarshalText() {
 	b := []byte{116, 101, 120, 116}
 
-	var h tkslog.Handler
-	if err := h.UnmarshalText(b); err != nil {
+	var hdl tkslog.Handler
+
+	err := hdl.UnmarshalText(b)
+	if err != nil {
 		panic(err)
 	}
 
-	fmt.Println(h.String())
+	fmt.Println(hdl.String())
 	// Output: text
 }
 

@@ -17,7 +17,8 @@ func ExampleRunServer() {
 	srv := &http.Server{Addr: ":8080", ReadHeaderTimeout: 60 * time.Second}
 	shutdownTimeout := 30 * time.Second
 
-	if err := tkhttp.RunServer(ctx, srv, shutdownTimeout); err != nil {
+	err := tkhttp.RunServer(ctx, srv, shutdownTimeout)
+	if err != nil {
 		panic(err)
 	}
 }
@@ -30,7 +31,8 @@ func ExampleRunServerTLS() {
 	keyFile := "/path/to/server.key"
 	shutdownTimeout := 30 * time.Second
 
-	if err := tkhttp.RunServerTLS(ctx, srv, certFile, keyFile, shutdownTimeout); err != nil {
+	err := tkhttp.RunServerTLS(ctx, srv, certFile, keyFile, shutdownTimeout)
+	if err != nil {
 		panic(err)
 	}
 }

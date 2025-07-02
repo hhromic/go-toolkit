@@ -147,12 +147,13 @@ func TestHandlerUnmarshalText(t *testing.T) {
 
 	for _, tCase := range testCases {
 		t.Run(tCase.name, func(t *testing.T) {
-			var h tkslog.Handler
-			err := h.UnmarshalText(tCase.b)
+			var hdl tkslog.Handler
+
+			err := hdl.UnmarshalText(tCase.b)
 			require.ErrorIs(t, err, tCase.wantErr)
 
 			if tCase.wantErr == nil {
-				assert.Equal(t, tCase.want, h)
+				assert.Equal(t, tCase.want, hdl)
 			}
 		})
 	}
@@ -223,6 +224,7 @@ func TestNewSlogLogger(t *testing.T) {
 	for _, tCase := range testCases {
 		t.Run(tCase.name, func(t *testing.T) {
 			var buf bytes.Buffer
+
 			l := tkslog.NewSlogLogger(&buf, tCase.handler, tCase.leveler)
 			require.NotNil(t, l)
 
@@ -233,6 +235,7 @@ func TestNewSlogLogger(t *testing.T) {
 
 	t.Run("InvalidHandler", func(t *testing.T) {
 		var buf bytes.Buffer
+
 		l := tkslog.NewSlogLogger(&buf, -1, slog.LevelDebug)
 		assert.Nil(t, l)
 	})

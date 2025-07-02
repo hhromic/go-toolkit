@@ -124,7 +124,9 @@ func (r *BareRange) UnmarshalText(b []byte) error {
 			rmin = RangeMin
 		} else {
 			var err error
-			if rmin, err = strconv.ParseInt(parts[0], 10, 0); err != nil {
+
+			rmin, err = strconv.ParseInt(parts[0], 10, 0)
+			if err != nil {
 				return fmt.Errorf("%q: parse int: %w", parts[0], err)
 			}
 		}
@@ -133,7 +135,9 @@ func (r *BareRange) UnmarshalText(b []byte) error {
 			rmax = RangeMax
 		} else {
 			var err error
-			if rmax, err = strconv.ParseInt(parts[1], 10, 0); err != nil {
+
+			rmax, err = strconv.ParseInt(parts[1], 10, 0)
+			if err != nil {
 				return fmt.Errorf("%q: parse int: %w", parts[1], err)
 			}
 		}
@@ -176,12 +180,14 @@ func (r *BareRanges) UnmarshalText(b []byte) error {
 
 	if len(b) > 0 {
 		for _, p := range bytes.Split(b, []byte{','}) {
-			var br BareRange
-			if err := br.UnmarshalText(p); err != nil {
+			var rng BareRange
+
+			err := rng.UnmarshalText(p)
+			if err != nil {
 				return fmt.Errorf("%q: unmarshal text: %w", string(p), err)
 			}
 
-			*r = append(*r, br)
+			*r = append(*r, rng)
 		}
 	}
 

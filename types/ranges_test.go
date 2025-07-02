@@ -389,12 +389,13 @@ func TestBareRangeUnmarshalText(t *testing.T) {
 
 	for _, tCase := range testCases {
 		t.Run(tCase.name, func(t *testing.T) {
-			var r tktypes.BareRange
-			err := r.UnmarshalText(tCase.b)
+			var rng tktypes.BareRange
+
+			err := rng.UnmarshalText(tCase.b)
 			require.ErrorIs(t, err, tCase.wantErr)
 
 			if tCase.wantErr == nil {
-				assert.Equal(t, tCase.want, r)
+				assert.Equal(t, tCase.want, rng)
 			}
 		})
 	}
@@ -492,12 +493,13 @@ func TestBareRangesUnmarshalText(t *testing.T) {
 
 	for _, tCase := range testCases {
 		t.Run(tCase.name, func(t *testing.T) {
-			var ranges tktypes.BareRanges
-			err := ranges.UnmarshalText(tCase.b)
+			var rngs tktypes.BareRanges
+
+			err := rngs.UnmarshalText(tCase.b)
 			require.ErrorIs(t, err, tCase.wantErr)
 
 			if tCase.wantErr == nil {
-				assert.Equal(t, tCase.want, ranges)
+				assert.Equal(t, tCase.want, rngs)
 			}
 		})
 	}
