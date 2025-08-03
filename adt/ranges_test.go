@@ -1,13 +1,13 @@
 // SPDX-FileCopyrightText: Copyright 2023 Hugo Hromic
 // SPDX-License-Identifier: Apache-2.0
 
-package types_test
+package adt_test
 
 import (
 	"strconv"
 	"testing"
 
-	tktypes "github.com/hhromic/go-toolkit/types"
+	"github.com/hhromic/go-toolkit/adt"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -15,17 +15,17 @@ import (
 func TestRangesLen(t *testing.T) {
 	testCases := []struct {
 		name   string
-		ranges tktypes.Ranges
+		ranges adt.Ranges
 		want   int
 	}{
 		{
 			name:   "Empty",
-			ranges: tktypes.Ranges{},
+			ranges: adt.Ranges{},
 			want:   0,
 		},
 		{
 			name: "TwoElements",
-			ranges: tktypes.Ranges{
+			ranges: adt.Ranges{
 				{Min: 1, Max: 3, Value: "foo"},
 				{Min: 5, Max: 7, Value: "bar"},
 			},
@@ -43,14 +43,14 @@ func TestRangesLen(t *testing.T) {
 func TestRangesLess(t *testing.T) {
 	testCases := []struct {
 		name      string
-		ranges    tktypes.Ranges
+		ranges    adt.Ranges
 		i, j      int
 		want      bool
 		wantPanic bool
 	}{
 		{
 			name:      "Empty",
-			ranges:    tktypes.Ranges{},
+			ranges:    adt.Ranges{},
 			i:         0,
 			j:         1,
 			want:      false,
@@ -58,7 +58,7 @@ func TestRangesLess(t *testing.T) {
 		},
 		{
 			name: "ThreeElements",
-			ranges: tktypes.Ranges{
+			ranges: adt.Ranges{
 				{Min: 1, Max: 3, Value: "foo"},
 				{Min: 2, Max: 5, Value: "baz"},
 				{Min: 5, Max: 7, Value: "bar"},
@@ -70,7 +70,7 @@ func TestRangesLess(t *testing.T) {
 		},
 		{
 			name: "ThreeElementsReversed",
-			ranges: tktypes.Ranges{
+			ranges: adt.Ranges{
 				{Min: 5, Max: 7, Value: "bar"},
 				{Min: 2, Max: 5, Value: "baz"},
 				{Min: 1, Max: 3, Value: "foo"},
@@ -98,29 +98,29 @@ func TestRangesLess(t *testing.T) {
 func TestRangesSwap(t *testing.T) {
 	testCases := []struct {
 		name      string
-		ranges    tktypes.Ranges
+		ranges    adt.Ranges
 		i, j      int
-		want      tktypes.Ranges
+		want      adt.Ranges
 		wantPanic bool
 	}{
 		{
 			name:      "Empty",
-			ranges:    tktypes.Ranges{},
+			ranges:    adt.Ranges{},
 			i:         0,
 			j:         1,
-			want:      tktypes.Ranges{},
+			want:      adt.Ranges{},
 			wantPanic: true,
 		},
 		{
 			name: "ThreeElements",
-			ranges: tktypes.Ranges{
+			ranges: adt.Ranges{
 				{Min: 1, Max: 3, Value: "foo"},
 				{Min: 2, Max: 5, Value: "baz"},
 				{Min: 5, Max: 7, Value: "bar"},
 			},
 			i: 0,
 			j: 1,
-			want: tktypes.Ranges{
+			want: adt.Ranges{
 				{Min: 2, Max: 5, Value: "baz"},
 				{Min: 1, Max: 3, Value: "foo"},
 				{Min: 5, Max: 7, Value: "bar"},
@@ -146,22 +146,22 @@ func TestRangesSwap(t *testing.T) {
 func TestRangesSort(t *testing.T) {
 	testCases := []struct {
 		name   string
-		ranges tktypes.Ranges
-		want   tktypes.Ranges
+		ranges adt.Ranges
+		want   adt.Ranges
 	}{
 		{
 			name:   "Empty",
-			ranges: tktypes.Ranges{},
-			want:   tktypes.Ranges{},
+			ranges: adt.Ranges{},
+			want:   adt.Ranges{},
 		},
 		{
 			name: "ThreeElements",
-			ranges: tktypes.Ranges{
+			ranges: adt.Ranges{
 				{Min: 2, Max: 5, Value: "baz"},
 				{Min: 5, Max: 7, Value: "bar"},
 				{Min: 1, Max: 3, Value: "foo"},
 			},
-			want: tktypes.Ranges{
+			want: adt.Ranges{
 				{Min: 1, Max: 3, Value: "foo"},
 				{Min: 2, Max: 5, Value: "baz"},
 				{Min: 5, Max: 7, Value: "bar"},
@@ -181,19 +181,19 @@ func TestRangesSort(t *testing.T) {
 func TestRangesSearch(t *testing.T) {
 	testCases := []struct {
 		name   string
-		ranges tktypes.Ranges
+		ranges adt.Ranges
 		v      int
 		want   any
 	}{
 		{
 			name:   "Empty",
-			ranges: tktypes.Ranges{},
+			ranges: adt.Ranges{},
 			v:      10,
 			want:   nil,
 		},
 		{
 			name: "ThreeElementsNotFound",
-			ranges: tktypes.Ranges{
+			ranges: adt.Ranges{
 				{Min: 1, Max: 3, Value: "foo"},
 				{Min: 2, Max: 5, Value: "baz"},
 				{Min: 5, Max: 7, Value: "bar"},
@@ -203,7 +203,7 @@ func TestRangesSearch(t *testing.T) {
 		},
 		{
 			name: "ThreeElementsOne",
-			ranges: tktypes.Ranges{
+			ranges: adt.Ranges{
 				{Min: 1, Max: 3, Value: "foo"},
 				{Min: 2, Max: 5, Value: "baz"},
 				{Min: 5, Max: 7, Value: "bar"},
@@ -213,7 +213,7 @@ func TestRangesSearch(t *testing.T) {
 		},
 		{
 			name: "ThreeElementsTwo",
-			ranges: tktypes.Ranges{
+			ranges: adt.Ranges{
 				{Min: 1, Max: 3, Value: "foo"},
 				{Min: 2, Max: 5, Value: "baz"},
 				{Min: 5, Max: 7, Value: "bar"},
@@ -223,7 +223,7 @@ func TestRangesSearch(t *testing.T) {
 		},
 		{
 			name: "ThreeElementsFour",
-			ranges: tktypes.Ranges{
+			ranges: adt.Ranges{
 				{Min: 1, Max: 3, Value: "foo"},
 				{Min: 2, Max: 5, Value: "baz"},
 				{Min: 5, Max: 7, Value: "bar"},
@@ -233,7 +233,7 @@ func TestRangesSearch(t *testing.T) {
 		},
 		{
 			name: "ThreeElementsFive",
-			ranges: tktypes.Ranges{
+			ranges: adt.Ranges{
 				{Min: 1, Max: 3, Value: "foo"},
 				{Min: 2, Max: 5, Value: "baz"},
 				{Min: 5, Max: 7, Value: "bar"},
@@ -243,7 +243,7 @@ func TestRangesSearch(t *testing.T) {
 		},
 		{
 			name: "ThreeElementsSix",
-			ranges: tktypes.Ranges{
+			ranges: adt.Ranges{
 				{Min: 1, Max: 3, Value: "foo"},
 				{Min: 2, Max: 5, Value: "baz"},
 				{Min: 5, Max: 7, Value: "bar"},
@@ -253,7 +253,7 @@ func TestRangesSearch(t *testing.T) {
 		},
 		{
 			name: "ThreeElementsEight",
-			ranges: tktypes.Ranges{
+			ranges: adt.Ranges{
 				{Min: 1, Max: 3, Value: "foo"},
 				{Min: 2, Max: 5, Value: "baz"},
 				{Min: 5, Max: 7, Value: "bar"},
@@ -273,39 +273,39 @@ func TestRangesSearch(t *testing.T) {
 func TestBareRangeMarshalText(t *testing.T) {
 	testCases := []struct {
 		name    string
-		r       tktypes.BareRange
+		r       adt.BareRange
 		want    []byte
 		wantErr error
 	}{
 		{
 			name:    "OpenLeft",
-			r:       tktypes.BareRange{Min: tktypes.RangeMin, Max: 10, Value: struct{}{}},
+			r:       adt.BareRange{Min: adt.RangeMin, Max: 10, Value: struct{}{}},
 			want:    []byte(":10"),
 			wantErr: nil,
 		},
 		{
 			name:    "Closed",
-			r:       tktypes.BareRange{Min: 20, Max: 30, Value: struct{}{}},
+			r:       adt.BareRange{Min: 20, Max: 30, Value: struct{}{}},
 			want:    []byte("20:30"),
 			wantErr: nil,
 		},
 		{
 			name:    "OpenRight",
-			r:       tktypes.BareRange{Min: 40, Max: tktypes.RangeMax, Value: struct{}{}},
+			r:       adt.BareRange{Min: 40, Max: adt.RangeMax, Value: struct{}{}},
 			want:    []byte("40:"),
 			wantErr: nil,
 		},
 		{
 			name:    "Single",
-			r:       tktypes.BareRange{Min: 50, Max: 50, Value: struct{}{}},
+			r:       adt.BareRange{Min: 50, Max: 50, Value: struct{}{}},
 			want:    []byte("50"),
 			wantErr: nil,
 		},
 		{
 			name: "FullRange",
-			r: tktypes.BareRange{
-				Min:   tktypes.RangeMin,
-				Max:   tktypes.RangeMax,
+			r: adt.BareRange{
+				Min:   adt.RangeMin,
+				Max:   adt.RangeMax,
 				Value: struct{}{},
 			},
 			want:    []byte(":"),
@@ -330,39 +330,39 @@ func TestBareRangeUnmarshalText(t *testing.T) {
 	testCases := []struct {
 		name    string
 		b       []byte
-		want    tktypes.BareRange
+		want    adt.BareRange
 		wantErr error
 	}{
 		{
 			name:    "OpenLeft",
 			b:       []byte(":10"),
-			want:    tktypes.BareRange{Min: tktypes.RangeMin, Max: 10, Value: struct{}{}},
+			want:    adt.BareRange{Min: adt.RangeMin, Max: 10, Value: struct{}{}},
 			wantErr: nil,
 		},
 		{
 			name:    "Closed",
 			b:       []byte("20:30"),
-			want:    tktypes.BareRange{Min: 20, Max: 30, Value: struct{}{}},
+			want:    adt.BareRange{Min: 20, Max: 30, Value: struct{}{}},
 			wantErr: nil,
 		},
 		{
 			name:    "OpenRight",
 			b:       []byte("40:"),
-			want:    tktypes.BareRange{Min: 40, Max: tktypes.RangeMax, Value: struct{}{}},
+			want:    adt.BareRange{Min: 40, Max: adt.RangeMax, Value: struct{}{}},
 			wantErr: nil,
 		},
 		{
 			name:    "Single",
 			b:       []byte("50"),
-			want:    tktypes.BareRange{Min: 50, Max: 50, Value: struct{}{}},
+			want:    adt.BareRange{Min: 50, Max: 50, Value: struct{}{}},
 			wantErr: nil,
 		},
 		{
 			name: "FullRange",
 			b:    []byte(":"),
-			want: tktypes.BareRange{
-				Min:   tktypes.RangeMin,
-				Max:   tktypes.RangeMax,
+			want: adt.BareRange{
+				Min:   adt.RangeMin,
+				Max:   adt.RangeMax,
 				Value: struct{}{},
 			},
 			wantErr: nil,
@@ -370,26 +370,26 @@ func TestBareRangeUnmarshalText(t *testing.T) {
 		{
 			name:    "InvalidFormat",
 			b:       []byte("foo::bar"),
-			want:    tktypes.BareRange{}, //nolint:exhaustruct
-			wantErr: tktypes.ErrUnknownFormat,
+			want:    adt.BareRange{}, //nolint:exhaustruct
+			wantErr: adt.ErrUnknownFormat,
 		},
 		{
 			name:    "InvalidSyntaxSingle",
 			b:       []byte("foo"),
-			want:    tktypes.BareRange{}, //nolint:exhaustruct
+			want:    adt.BareRange{}, //nolint:exhaustruct
 			wantErr: strconv.ErrSyntax,
 		},
 		{
 			name:    "InvalidSyntaxRange",
 			b:       []byte("foo:bar"),
-			want:    tktypes.BareRange{}, //nolint:exhaustruct
+			want:    adt.BareRange{}, //nolint:exhaustruct
 			wantErr: strconv.ErrSyntax,
 		},
 	}
 
 	for _, tCase := range testCases {
 		t.Run(tCase.name, func(t *testing.T) {
-			var rng tktypes.BareRange
+			var rng adt.BareRange
 
 			err := rng.UnmarshalText(tCase.b)
 			require.ErrorIs(t, err, tCase.wantErr)
@@ -404,19 +404,19 @@ func TestBareRangeUnmarshalText(t *testing.T) {
 func TestBareRangesMarshalText(t *testing.T) {
 	testCases := []struct {
 		name    string
-		ranges  tktypes.BareRanges
+		ranges  adt.BareRanges
 		want    []byte
 		wantErr error
 	}{
 		{
 			name:    "Empty",
-			ranges:  tktypes.BareRanges{},
+			ranges:  adt.BareRanges{},
 			want:    []byte(""),
 			wantErr: nil,
 		},
 		{
 			name: "OneElement",
-			ranges: tktypes.BareRanges{
+			ranges: adt.BareRanges{
 				{Min: 10, Max: 20, Value: struct{}{}},
 			},
 			want:    []byte("10:20"),
@@ -424,10 +424,10 @@ func TestBareRangesMarshalText(t *testing.T) {
 		},
 		{
 			name: "ThreeElements",
-			ranges: tktypes.BareRanges{
-				{Min: tktypes.RangeMin, Max: 10, Value: struct{}{}},
+			ranges: adt.BareRanges{
+				{Min: adt.RangeMin, Max: 10, Value: struct{}{}},
 				{Min: 20, Max: 30, Value: struct{}{}},
-				{Min: 40, Max: tktypes.RangeMax, Value: struct{}{}},
+				{Min: 40, Max: adt.RangeMax, Value: struct{}{}},
 			},
 			want:    []byte(":10,20:30,40:"),
 			wantErr: nil,
@@ -450,19 +450,19 @@ func TestBareRangesUnmarshalText(t *testing.T) {
 	testCases := []struct {
 		name    string
 		b       []byte
-		want    tktypes.BareRanges
+		want    adt.BareRanges
 		wantErr error
 	}{
 		{
 			name:    "Empty",
 			b:       []byte(""),
-			want:    tktypes.BareRanges{},
+			want:    adt.BareRanges{},
 			wantErr: nil,
 		},
 		{
 			name: "OneElement",
 			b:    []byte("10:20"),
-			want: tktypes.BareRanges{
+			want: adt.BareRanges{
 				{Min: 10, Max: 20, Value: struct{}{}},
 			},
 			wantErr: nil,
@@ -470,30 +470,30 @@ func TestBareRangesUnmarshalText(t *testing.T) {
 		{
 			name: "ThreeElements",
 			b:    []byte(":10,20:30,40:"),
-			want: tktypes.BareRanges{
-				{Min: tktypes.RangeMin, Max: 10, Value: struct{}{}},
+			want: adt.BareRanges{
+				{Min: adt.RangeMin, Max: 10, Value: struct{}{}},
 				{Min: 20, Max: 30, Value: struct{}{}},
-				{Min: 40, Max: tktypes.RangeMax, Value: struct{}{}},
+				{Min: 40, Max: adt.RangeMax, Value: struct{}{}},
 			},
 			wantErr: nil,
 		},
 		{
 			name:    "InvalidFormat",
 			b:       []byte(":10;20:30;40:"),
-			want:    tktypes.BareRanges{},
-			wantErr: tktypes.ErrUnknownFormat,
+			want:    adt.BareRanges{},
+			wantErr: adt.ErrUnknownFormat,
 		},
 		{
 			name:    "InvalidSyntax",
 			b:       []byte(":bar,foo:30,40:"),
-			want:    tktypes.BareRanges{},
+			want:    adt.BareRanges{},
 			wantErr: strconv.ErrSyntax,
 		},
 	}
 
 	for _, tCase := range testCases {
 		t.Run(tCase.name, func(t *testing.T) {
-			var rngs tktypes.BareRanges
+			var rngs adt.BareRanges
 
 			err := rngs.UnmarshalText(tCase.b)
 			require.ErrorIs(t, err, tCase.wantErr)
