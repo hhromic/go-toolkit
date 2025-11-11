@@ -179,7 +179,7 @@ func (r *BareRanges) UnmarshalText(b []byte) error {
 	*r = BareRanges{}
 
 	if len(b) > 0 {
-		for _, p := range bytes.Split(b, []byte{','}) {
+		for p := range bytes.SplitSeq(b, []byte{','}) {
 			var rng BareRange
 
 			err := rng.UnmarshalText(p)
