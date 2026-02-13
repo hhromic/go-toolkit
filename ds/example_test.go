@@ -1,16 +1,16 @@
 // SPDX-FileCopyrightText: Copyright 2023 Hugo Hromic
 // SPDX-License-Identifier: Apache-2.0
 
-package adt_test
+package ds_test
 
 import (
 	"fmt"
 
-	"github.com/hhromic/go-toolkit/adt"
+	"github.com/hhromic/go-toolkit/ds"
 )
 
 func ExampleRanges_Sort() {
-	ranges := adt.Ranges{
+	ranges := ds.Ranges{
 		{Min: 4, Max: 4, Value: "cat"},
 		{Min: 1, Max: 2, Value: "dog"},
 		{Min: 3, Max: 8, Value: "fox"},
@@ -24,7 +24,7 @@ func ExampleRanges_Sort() {
 }
 
 func ExampleRanges_Search() {
-	ranges := adt.Ranges{
+	ranges := ds.Ranges{
 		{Min: 1, Max: 2, Value: "dog"},
 		{Min: 4, Max: 4, Value: "cat"},
 	}
@@ -43,12 +43,12 @@ func ExampleRanges_Search() {
 }
 
 func ExampleBareRange_MarshalText() {
-	ranges := []adt.BareRange{
-		{Min: adt.RangeMin, Max: 10, Value: struct{}{}},
+	ranges := []ds.BareRange{
+		{Min: ds.RangeMin, Max: 10, Value: struct{}{}},
 		{Min: 20, Max: 30, Value: struct{}{}},
-		{Min: 40, Max: adt.RangeMax, Value: struct{}{}},
+		{Min: 40, Max: ds.RangeMax, Value: struct{}{}},
 		{Min: 50, Max: 50, Value: struct{}{}},
-		{Min: adt.RangeMin, Max: adt.RangeMax, Value: struct{}{}},
+		{Min: ds.RangeMin, Max: ds.RangeMax, Value: struct{}{}},
 	}
 
 	for _, r := range ranges {
@@ -70,7 +70,7 @@ func ExampleBareRange_MarshalText() {
 
 func ExampleBareRange_UnmarshalText() {
 	for _, t := range []string{":10", "20:30", "40:", "50", ":"} {
-		var rng adt.BareRange
+		var rng ds.BareRange
 
 		err := rng.UnmarshalText([]byte(t))
 		if err != nil {
@@ -89,12 +89,12 @@ func ExampleBareRange_UnmarshalText() {
 }
 
 func ExampleBareRanges_MarshalText() {
-	ranges := adt.BareRanges{
-		{Min: adt.RangeMin, Max: 10, Value: struct{}{}},
+	ranges := ds.BareRanges{
+		{Min: ds.RangeMin, Max: 10, Value: struct{}{}},
 		{Min: 20, Max: 30, Value: struct{}{}},
-		{Min: 40, Max: adt.RangeMax, Value: struct{}{}},
+		{Min: 40, Max: ds.RangeMax, Value: struct{}{}},
 		{Min: 50, Max: 50, Value: struct{}{}},
-		{Min: adt.RangeMin, Max: adt.RangeMax, Value: struct{}{}},
+		{Min: ds.RangeMin, Max: ds.RangeMax, Value: struct{}{}},
 	}
 
 	b, err := ranges.MarshalText()
@@ -112,7 +112,7 @@ func ExampleBareRanges_MarshalText() {
 func ExampleBareRanges_UnmarshalText() {
 	t := ":10,20:30,40:,50,:"
 
-	var rngs adt.BareRanges
+	var rngs ds.BareRanges
 
 	err := rngs.UnmarshalText([]byte(t))
 	if err != nil {
