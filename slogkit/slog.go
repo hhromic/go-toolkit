@@ -15,10 +15,10 @@ import (
 	"github.com/mattn/go-isatty"
 )
 
-// Handler represents a supported slog handler.
+// Handler represents a supported slogkit handler.
 type Handler int
 
-// Supported slog handlers.
+// Supported slogkit handlers.
 const (
 	// HandlerText is an slog TextHandler which outputs logs in key=value format.
 	HandlerText Handler = iota
@@ -30,13 +30,13 @@ const (
 	HandlerAuto
 )
 
-// Errors used by the slog package.
+// Errors used by the slogkit package.
 var (
-	// ErrUnknownHandlerName is returned when an unknown slog handler name is used.
+	// ErrUnknownHandlerName is returned when an unknown slogkit handler name is used.
 	ErrUnknownHandlerName = errors.New("unknown handler name")
 )
 
-// String returns a name for the slog handler.
+// String returns a name for the slogkit handler.
 func (h Handler) String() string {
 	switch h {
 	case HandlerText:
@@ -77,7 +77,7 @@ func (h *Handler) UnmarshalText(b []byte) error {
 	return nil
 }
 
-// NewLogger creates an slog Logger that outputs to writer, using the specified log handler
+// NewLogger creates an slog Logger that outputs to writer, using the specified slogkit handler
 // and the specified leveler implementation (for minimum logging level). This function also renames
 // the built-in [slog.TimeKey] attribute to "ts" for shorter log lines.
 func NewLogger(writer io.Writer, handler Handler, leveler slog.Leveler) *slog.Logger {
