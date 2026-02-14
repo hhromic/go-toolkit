@@ -160,7 +160,7 @@ func TestHandlerUnmarshalText(t *testing.T) {
 }
 
 //nolint:funlen
-func TestNewSlogLogger(t *testing.T) {
+func TestNewLogger(t *testing.T) {
 	testCases := []struct {
 		name     string
 		handler  slogkit.Handler
@@ -225,7 +225,7 @@ func TestNewSlogLogger(t *testing.T) {
 		t.Run(tCase.name, func(t *testing.T) {
 			var buf bytes.Buffer
 
-			l := slogkit.NewSlogLogger(&buf, tCase.handler, tCase.leveler)
+			l := slogkit.NewLogger(&buf, tCase.handler, tCase.leveler)
 			require.NotNil(t, l)
 
 			l.Log(context.Background(), tCase.logLevel, tCase.logMsg, tCase.logArgs...)
@@ -236,7 +236,7 @@ func TestNewSlogLogger(t *testing.T) {
 	t.Run("InvalidHandler", func(t *testing.T) {
 		var buf bytes.Buffer
 
-		l := slogkit.NewSlogLogger(&buf, -1, slog.LevelDebug)
+		l := slogkit.NewLogger(&buf, -1, slog.LevelDebug)
 		assert.Nil(t, l)
 	})
 }

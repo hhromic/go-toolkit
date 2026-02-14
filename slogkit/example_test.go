@@ -45,20 +45,20 @@ func ExampleHandler_UnmarshalText() {
 }
 
 //nolint:testableexamples
-func ExampleNewSlogLogger() {
+func ExampleNewLogger() {
 	h := slogkit.HandlerText
 	l := slog.LevelDebug
-	logger := slogkit.NewSlogLogger(os.Stdout, h, l)
+	logger := slogkit.NewLogger(os.Stdout, h, l)
 
 	version := "1.2.3"
 	logger.Info("application started", "version", version)
 }
 
 //nolint:testableexamples
-func ExampleNewSlogLogger_setDefault() {
+func ExampleNewLogger_setDefault() {
 	h := slogkit.HandlerText
 	l := slog.LevelDebug
-	logger := slogkit.NewSlogLogger(os.Stdout, h, l)
+	logger := slogkit.NewLogger(os.Stdout, h, l)
 
 	slog.SetDefault(logger)
 

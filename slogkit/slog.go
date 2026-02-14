@@ -77,10 +77,10 @@ func (h *Handler) UnmarshalText(b []byte) error {
 	return nil
 }
 
-// NewSlogLogger creates an slog Logger that outputs to writer, using the specified log handler
+// NewLogger creates an slog Logger that outputs to writer, using the specified log handler
 // and the specified leveler implementation (for minimum logging level). This function also renames
 // the built-in [slog.TimeKey] attribute to "ts" for shorter log lines.
-func NewSlogLogger(writer io.Writer, handler Handler, leveler slog.Leveler) *slog.Logger {
+func NewLogger(writer io.Writer, handler Handler, leveler slog.Leveler) *slog.Logger {
 	opts := &slog.HandlerOptions{
 		AddSource: false,
 		Level:     leveler,
