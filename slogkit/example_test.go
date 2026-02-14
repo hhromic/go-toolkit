@@ -46,9 +46,7 @@ func ExampleHandler_UnmarshalText() {
 
 //nolint:testableexamples
 func ExampleNewLogger() {
-	h := slogkit.HandlerText
-	l := slog.LevelDebug
-	logger := slogkit.NewLogger(os.Stdout, h, l)
+	logger := slogkit.NewLogger(os.Stdout, slogkit.HandlerText, slog.LevelDebug)
 
 	version := "1.2.3"
 	logger.Info("application started", "version", version)
@@ -56,9 +54,7 @@ func ExampleNewLogger() {
 
 //nolint:testableexamples
 func ExampleNewLogger_setDefault() {
-	h := slogkit.HandlerText
-	l := slog.LevelDebug
-	logger := slogkit.NewLogger(os.Stdout, h, l)
+	logger := slogkit.NewLogger(os.Stdout, slogkit.HandlerText, slog.LevelDebug)
 
 	slog.SetDefault(logger)
 
