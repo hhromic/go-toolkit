@@ -1,25 +1,25 @@
 // SPDX-FileCopyrightText: Copyright 2023 Hugo Hromic
 // SPDX-License-Identifier: Apache-2.0
 
-package slog_test
+package slogkit_test
 
 import (
 	"fmt"
 	"log/slog"
 	"os"
 
-	tkslog "github.com/hhromic/go-toolkit/slog"
+	"github.com/hhromic/go-toolkit/slogkit"
 )
 
 func ExampleHandler_String() {
-	h := tkslog.HandlerText
+	h := slogkit.HandlerText
 	fmt.Println(h.String())
 	// Output: text
 }
 
 //nolint:staticcheck
 func ExampleHandler_MarshalText() {
-	h := tkslog.HandlerText
+	h := slogkit.HandlerText
 
 	b, err := h.MarshalText()
 	if err != nil {
@@ -33,7 +33,7 @@ func ExampleHandler_MarshalText() {
 func ExampleHandler_UnmarshalText() {
 	b := []byte{116, 101, 120, 116}
 
-	var hdl tkslog.Handler
+	var hdl slogkit.Handler
 
 	err := hdl.UnmarshalText(b)
 	if err != nil {
@@ -46,9 +46,9 @@ func ExampleHandler_UnmarshalText() {
 
 //nolint:testableexamples
 func ExampleNewSlogLogger() {
-	h := tkslog.HandlerText
+	h := slogkit.HandlerText
 	l := slog.LevelDebug
-	logger := tkslog.NewSlogLogger(os.Stdout, h, l)
+	logger := slogkit.NewSlogLogger(os.Stdout, h, l)
 
 	version := "1.2.3"
 	logger.Info("application started", "version", version)
@@ -56,9 +56,9 @@ func ExampleNewSlogLogger() {
 
 //nolint:testableexamples
 func ExampleNewSlogLogger_setDefault() {
-	h := tkslog.HandlerText
+	h := slogkit.HandlerText
 	l := slog.LevelDebug
-	logger := tkslog.NewSlogLogger(os.Stdout, h, l)
+	logger := slogkit.NewSlogLogger(os.Stdout, h, l)
 
 	slog.SetDefault(logger)
 

@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: Copyright 2023 Hugo Hromic
 // SPDX-License-Identifier: Apache-2.0
 
-package slog_test
+package slogkit_test
 
 import (
 	"bytes"
@@ -10,7 +10,7 @@ import (
 	"regexp"
 	"testing"
 
-	tkslog "github.com/hhromic/go-toolkit/slog"
+	"github.com/hhromic/go-toolkit/slogkit"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -18,27 +18,27 @@ import (
 func TestHandlerString(t *testing.T) {
 	testCases := []struct {
 		name    string
-		handler tkslog.Handler
+		handler slogkit.Handler
 		want    string
 	}{
 		{
 			name:    "HandlerText",
-			handler: tkslog.HandlerText,
+			handler: slogkit.HandlerText,
 			want:    "text",
 		},
 		{
 			name:    "HandlerJSON",
-			handler: tkslog.HandlerJSON,
+			handler: slogkit.HandlerJSON,
 			want:    "json",
 		},
 		{
 			name:    "HandlerTint",
-			handler: tkslog.HandlerTint,
+			handler: slogkit.HandlerTint,
 			want:    "tint",
 		},
 		{
 			name:    "HandlerAuto",
-			handler: tkslog.HandlerAuto,
+			handler: slogkit.HandlerAuto,
 			want:    "auto",
 		},
 		{
@@ -58,31 +58,31 @@ func TestHandlerString(t *testing.T) {
 func TestHandlerMarshalText(t *testing.T) {
 	testCases := []struct {
 		name    string
-		handler tkslog.Handler
+		handler slogkit.Handler
 		want    []byte
 		wantErr error
 	}{
 		{
 			name:    "HandlerText",
-			handler: tkslog.HandlerText,
+			handler: slogkit.HandlerText,
 			want:    []byte("text"),
 			wantErr: nil,
 		},
 		{
 			name:    "HandlerJSON",
-			handler: tkslog.HandlerJSON,
+			handler: slogkit.HandlerJSON,
 			want:    []byte("json"),
 			wantErr: nil,
 		},
 		{
 			name:    "HandlerTint",
-			handler: tkslog.HandlerTint,
+			handler: slogkit.HandlerTint,
 			want:    []byte("tint"),
 			wantErr: nil,
 		},
 		{
 			name:    "HandlerAuto",
-			handler: tkslog.HandlerAuto,
+			handler: slogkit.HandlerAuto,
 			want:    []byte("auto"),
 			wantErr: nil,
 		},
@@ -110,44 +110,44 @@ func TestHandlerUnmarshalText(t *testing.T) {
 	testCases := []struct {
 		name    string
 		b       []byte
-		want    tkslog.Handler
+		want    slogkit.Handler
 		wantErr error
 	}{
 		{
 			name:    "HandlerText",
 			b:       []byte("text"),
-			want:    tkslog.HandlerText,
+			want:    slogkit.HandlerText,
 			wantErr: nil,
 		},
 		{
 			name:    "HandlerJSON",
 			b:       []byte("json"),
-			want:    tkslog.HandlerJSON,
+			want:    slogkit.HandlerJSON,
 			wantErr: nil,
 		},
 		{
 			name:    "HandlerTint",
 			b:       []byte("tint"),
-			want:    tkslog.HandlerTint,
+			want:    slogkit.HandlerTint,
 			wantErr: nil,
 		},
 		{
 			name:    "HandlerAuto",
 			b:       []byte("auto"),
-			want:    tkslog.HandlerAuto,
+			want:    slogkit.HandlerAuto,
 			wantErr: nil,
 		},
 		{
 			name:    "InvalidHandler",
 			b:       []byte("foobar"),
-			want:    tkslog.HandlerText,
-			wantErr: tkslog.ErrUnknownHandlerName,
+			want:    slogkit.HandlerText,
+			wantErr: slogkit.ErrUnknownHandlerName,
 		},
 	}
 
 	for _, tCase := range testCases {
 		t.Run(tCase.name, func(t *testing.T) {
-			var hdl tkslog.Handler
+			var hdl slogkit.Handler
 
 			err := hdl.UnmarshalText(tCase.b)
 			require.ErrorIs(t, err, tCase.wantErr)
@@ -163,7 +163,7 @@ func TestHandlerUnmarshalText(t *testing.T) {
 func TestNewSlogLogger(t *testing.T) {
 	testCases := []struct {
 		name     string
-		handler  tkslog.Handler
+		handler  slogkit.Handler
 		leveler  slog.Level
 		logLevel slog.Level
 		logMsg   string
@@ -172,7 +172,7 @@ func TestNewSlogLogger(t *testing.T) {
 	}{
 		{
 			name:     "HandlerText-Debug-Debug",
-			handler:  tkslog.HandlerText,
+			handler:  slogkit.HandlerText,
 			leveler:  slog.LevelDebug,
 			logLevel: slog.LevelDebug,
 			logMsg:   "message",
@@ -181,7 +181,7 @@ func TestNewSlogLogger(t *testing.T) {
 		},
 		{
 			name:     "HandlerJSON-Debug-Info",
-			handler:  tkslog.HandlerJSON,
+			handler:  slogkit.HandlerJSON,
 			leveler:  slog.LevelDebug,
 			logLevel: slog.LevelInfo,
 			logMsg:   "message",
@@ -192,7 +192,7 @@ func TestNewSlogLogger(t *testing.T) {
 		},
 		{
 			name:     "HandlerTint-Debug-Warn",
-			handler:  tkslog.HandlerTint,
+			handler:  slogkit.HandlerTint,
 			leveler:  slog.LevelDebug,
 			logLevel: slog.LevelWarn,
 			logMsg:   "message",
@@ -203,7 +203,7 @@ func TestNewSlogLogger(t *testing.T) {
 		},
 		{
 			name:     "HandlerAuto-Debug-Error",
-			handler:  tkslog.HandlerAuto,
+			handler:  slogkit.HandlerAuto,
 			leveler:  slog.LevelDebug,
 			logLevel: slog.LevelError,
 			logMsg:   "message",
@@ -212,7 +212,7 @@ func TestNewSlogLogger(t *testing.T) {
 		},
 		{
 			name:     "HandlerText-Warn-Info",
-			handler:  tkslog.HandlerText,
+			handler:  slogkit.HandlerText,
 			leveler:  slog.LevelWarn,
 			logLevel: slog.LevelInfo,
 			logMsg:   "message",
@@ -225,7 +225,7 @@ func TestNewSlogLogger(t *testing.T) {
 		t.Run(tCase.name, func(t *testing.T) {
 			var buf bytes.Buffer
 
-			l := tkslog.NewSlogLogger(&buf, tCase.handler, tCase.leveler)
+			l := slogkit.NewSlogLogger(&buf, tCase.handler, tCase.leveler)
 			require.NotNil(t, l)
 
 			l.Log(context.Background(), tCase.logLevel, tCase.logMsg, tCase.logArgs...)
@@ -236,7 +236,7 @@ func TestNewSlogLogger(t *testing.T) {
 	t.Run("InvalidHandler", func(t *testing.T) {
 		var buf bytes.Buffer
 
-		l := tkslog.NewSlogLogger(&buf, -1, slog.LevelDebug)
+		l := slogkit.NewSlogLogger(&buf, -1, slog.LevelDebug)
 		assert.Nil(t, l)
 	})
 }
