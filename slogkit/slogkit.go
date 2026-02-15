@@ -4,7 +4,6 @@
 package slogkit
 
 import (
-	"errors"
 	"fmt"
 	"io"
 	"log/slog"
@@ -28,12 +27,6 @@ const (
 	HandlerTint
 	// HandlerAuto uses HandlerTint if the output writer is a terminal or HandlerText otherwise.
 	HandlerAuto
-)
-
-// Errors used by the slogkit package.
-var (
-	// ErrUnknownHandlerName is returned when an unknown slogkit handler name is used.
-	ErrUnknownHandlerName = errors.New("unknown handler name")
 )
 
 // String returns a name for the slogkit handler.
