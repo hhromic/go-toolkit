@@ -3,9 +3,7 @@ version: '2'
 linters:
   default: all
   disable:
-    - copyloopvar  # project is lower than Go 1.22
     - depguard  # not currently used
-    - intrange  # project is lower than Go 1.22
     - paralleltest  # no need to enforce parallel testing
     - wsl  # replaced by 'wsl_v5'
   settings:
