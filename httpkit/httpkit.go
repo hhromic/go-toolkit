@@ -77,5 +77,5 @@ func waitAndShutdown(
 	ctx, cancel := context.WithTimeout(context.Background(), timeout)
 	defer cancel()
 
-	errCh <- srv.Shutdown(ctx) //nolint:contextcheck
+	errCh <- srv.Shutdown(ctx) //nolint:contextcheck // No usable context to inherit from.
 }

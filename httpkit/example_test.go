@@ -11,7 +11,6 @@ import (
 	"github.com/hhromic/go-toolkit/httpkit"
 )
 
-//nolint:exhaustruct,testableexamples
 func ExampleRunServer() {
 	ctx := context.Background() // should use a proper application context
 	srv := &http.Server{Addr: ":8080", ReadHeaderTimeout: 60 * time.Second}
@@ -23,7 +22,6 @@ func ExampleRunServer() {
 	}
 }
 
-//nolint:exhaustruct,testableexamples
 func ExampleRunServerTLS() {
 	ctx := context.Background() // should use a proper application context
 	srv := &http.Server{Addr: ":8080", ReadHeaderTimeout: 60 * time.Second}

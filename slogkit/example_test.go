@@ -17,7 +17,7 @@ func ExampleHandler_String() {
 	// Output: text
 }
 
-//nolint:staticcheck
+//nolint:staticcheck // Binary slice output is preferred.
 func ExampleHandler_MarshalText() {
 	h := slogkit.HandlerText
 
@@ -44,7 +44,6 @@ func ExampleHandler_UnmarshalText() {
 	// Output: text
 }
 
-//nolint:testableexamples
 func ExampleNewLogger() {
 	logger := slogkit.NewLogger(os.Stdout, slogkit.HandlerText, slog.LevelDebug)
 
@@ -52,7 +51,6 @@ func ExampleNewLogger() {
 	logger.Info("application started", "version", version)
 }
 
-//nolint:testableexamples
 func ExampleNewLogger_setDefault() {
 	logger := slogkit.NewLogger(os.Stdout, slogkit.HandlerText, slog.LevelDebug)
 

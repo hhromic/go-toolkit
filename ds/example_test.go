@@ -108,7 +108,6 @@ func ExampleBareRanges_MarshalText() {
 	// :10,20:30,40:,50,:
 }
 
-//nolint:lll
 func ExampleBareRanges_UnmarshalText() {
 	t := ":10,20:30,40:,50,:"
 

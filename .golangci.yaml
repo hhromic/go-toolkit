@@ -5,7 +5,15 @@ linters:
   disable:
     - depguard  # not currently used
     - paralleltest  # no need to enforce parallel testing
+    - testableexamples  # no need to enforce testable examples
     - wsl  # replaced by 'wsl_v5'
+  exclusions:
+    rules:
+      - path: '(.+)_test\.go'
+        linters:
+          - exhaustruct
+          - funlen
+          - lll
   settings:
     misspell:
       locale: US

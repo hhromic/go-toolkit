@@ -159,7 +159,6 @@ func TestHandlerUnmarshalText(t *testing.T) {
 	}
 }
 
-//nolint:funlen
 func TestNewLogger(t *testing.T) {
 	testCases := []struct {
 		name     string

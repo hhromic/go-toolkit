@@ -177,7 +177,6 @@ func TestRangesSort(t *testing.T) {
 	}
 }
 
-//nolint:funlen
 func TestRangesSearch(t *testing.T) {
 	testCases := []struct {
 		name   string
@@ -325,7 +324,6 @@ func TestBareRangeMarshalText(t *testing.T) {
 	}
 }
 
-//nolint:funlen
 func TestBareRangeUnmarshalText(t *testing.T) {
 	testCases := []struct {
 		name    string
@@ -370,19 +368,19 @@ func TestBareRangeUnmarshalText(t *testing.T) {
 		{
 			name:    "InvalidFormat",
 			b:       []byte("foo::bar"),
-			want:    ds.BareRange{}, //nolint:exhaustruct
+			want:    ds.BareRange{},
 			wantErr: ds.ErrUnknownFormat,
 		},
 		{
 			name:    "InvalidSyntaxSingle",
 			b:       []byte("foo"),
-			want:    ds.BareRange{}, //nolint:exhaustruct
+			want:    ds.BareRange{},
 			wantErr: strconv.ErrSyntax,
 		},
 		{
 			name:    "InvalidSyntaxRange",
 			b:       []byte("foo:bar"),
-			want:    ds.BareRange{}, //nolint:exhaustruct
+			want:    ds.BareRange{},
 			wantErr: strconv.ErrSyntax,
 		},
 	}
