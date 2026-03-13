@@ -41,7 +41,7 @@ func (h Handler) String() string {
 	case HandlerAuto:
 		return "auto"
 	default:
-		return ""
+		return fmt.Sprintf("Handler(%d)", h)
 	}
 }
 

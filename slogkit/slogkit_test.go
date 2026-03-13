@@ -42,9 +42,9 @@ func TestHandlerString(t *testing.T) {
 			want:    "auto",
 		},
 		{
-			name:    "InvalidHandler",
+			name:    "UnknownHandler",
 			handler: -1,
-			want:    "",
+			want:    "Handler(-1)",
 		},
 	}
 
@@ -87,9 +87,9 @@ func TestHandlerMarshalText(t *testing.T) {
 			wantErr: nil,
 		},
 		{
-			name:    "InvalidHandler",
+			name:    "UnknownHandler",
 			handler: -1,
-			want:    []byte(""),
+			want:    []byte("Handler(-1)"),
 			wantErr: nil,
 		},
 	}
