@@ -17,7 +17,7 @@ func RunServer(ctx context.Context, srv *http.Server, timeout time.Duration) err
 	doneCh := make(chan struct{}, 1)
 	errCh := make(chan error, 1)
 
-	go waitAndShutdown(ctx, srv, timeout, doneCh, errCh)
+	go waitAndShutdown(ctx, srv, timeout, doneCh, errCh) //nolint:gosec // No context is available.
 
 	err := srv.ListenAndServe()
 	if err != nil && !errors.Is(err, http.ErrServerClosed) {
@@ -45,7 +45,7 @@ func RunServerTLS(
 	doneCh := make(chan struct{}, 1)
 	errCh := make(chan error, 1)
 
-	go waitAndShutdown(ctx, srv, timeout, doneCh, errCh)
+	go waitAndShutdown(ctx, srv, timeout, doneCh, errCh) //nolint:gosec // No context is available.
 
 	err := srv.ListenAndServeTLS(certFile, keyFile)
 	if err != nil && !errors.Is(err, http.ErrServerClosed) {
