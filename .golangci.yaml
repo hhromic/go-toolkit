@@ -4,6 +4,7 @@ linters:
   default: all
   disable:
     - depguard  # not currently used
+    - gomodguard  # replaced by 'gomodguard_v2'
     - paralleltest  # no need to enforce parallel testing
     - testableexamples  # no need to enforce testable examples
     - wsl  # replaced by 'wsl_v5'
@@ -13,6 +14,7 @@ linters:
         linters:
           - exhaustruct
           - funlen
+          - goconst
           - lll
   settings:
     misspell:
