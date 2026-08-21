@@ -102,7 +102,7 @@ func NewLogger(writer io.Writer, handler Handler, leveler slog.Leveler) *slog.Lo
 		return slog.New(slog.NewJSONHandler(writer, opts))
 	case HandlerTint:
 		return slog.New(
-			tint.NewHandler(writer, &tint.Options{ //nolint:exhaustruct_v5 // Use defaults.
+			tint.NewTextHandler(writer, &tint.Options{ //nolint:exhaustruct_v5 // Use defaults.
 				AddSource: opts.AddSource,
 				Level:     opts.Level,
 			}),
